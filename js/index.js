@@ -1,15 +1,18 @@
 var products = new Array;
+var tipos_envio = new Array;
+
 var cotizador_totals = new Array;
 var opciones_pagos = new Array;
 var current_step_id = "";
 var togo_step_id = "";
-var dias_envios = new Array;
 var envio_selected;
 
 $(document).ready(function () {
+    subtotal= 0;
+
+
     //Initialize tooltips
     $('.nav-tabs > li a[title]').tooltip();
-
     //Wizard    
     $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
         var $target = $(e.target);
@@ -46,26 +49,77 @@ $(document).ready(function () {
     };
     date_input.datepicker(options);
 
-    products[0] = 17;
-    products[1] = 9;
-    products[2] = 9;
-    products[3] = 240;
-
     cotizador_totals[0] = 0;
     cotizador_totals[1] = 0;
     cotizador_totals[2] = 0;
     cotizador_totals[3] = 0;
 
-    dias_envios['normal'] = 30;
-    dias_envios['express'] = 15;
-    dias_envios['internacional'] = 50;
-
-    $(".cantidad").live("change", function () {
-        console.log("Cantidad change");
-        var valor = $(this).val();
-    });
-
     envio_selected = "";
+
+    fetch('getProducts.php')
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (myJson) {
+            products = myJson;
+            $.each(myJson, function (index, item) {
+                $("#cotizador tbody").append('<tr class="product_line"> '+
+                    '    <td style="width: 50px"> '+
+                    '    <input type="number" min="0" value="0" onchange="calcularResultado(this);"  '+
+                    '    id="cantidad_'+ index +'" class="cantidad" '+
+                    '        style=" width:60px; text-align: center; margin-top:5px;" /> '+
+                    '    </td> '+
+                    '    <td style="width: 200px"> '+
+                    '    <div> '+ item.name +' </div> '+
+                    '    </td> '+
+                    '    <td style="width: 140px"> '+
+                    '    <div class="precio"> $'+ item.unit_price +' </div> '+
+                    '    </td> '+
+                    '    <td style="width: 80px">'+
+                    '    <div class="resultado"> $0 </div>'+
+                    '    </td> '+
+                    '</tr>');
+            });
+
+            $("#cotizador tbody").append('<tr class="subtotal"> '+
+                    '<td style="width: 80px;"> </td> '+
+                    '<td style="width: 200px"> </td> '+
+                    '<td style="width: 80px"> '+
+                    '<div style="margin-top:60px;"> SUBTOTAL: </div> '+
+                    '</td> '+
+                    '<td style="width: 80px"> '+
+                    '<div class="total" style="margin-top:60px; font-weight: bold;"> $0 </div> '+
+                    '</td> '+
+                    '</tr>');
+        });
+
+
+        fetch('getTiposEnvio.php')
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (myJson) {
+                tipos_envio = myJson;
+
+                $.each(tipos_envio,function(index, item){
+                        $("#tipos_envios tbody tr td").append(
+                            '<div class="radio">'+
+                            '    <label><input type="radio" onclick="gettipoenvio(this)" id="envio_'+  index +'" name="optradio" checked> '+  item.name +' ('+  item.dias_habiles +' DÍAS '+
+                            '        HÁBILES) $'+  item.price +' '+
+                            '    </label> '+
+                            '</div> '
+                            );
+                        //tipos_envio[item.keyword] = item.price;
+                    });
+
+                $("#tipos_envios tbody tr td").append(
+                    ' <div class="total_cenv" style="margin-top:30px; margin-left:350px;">'+
+                    '    TOTAL: <span id="total_conenvio" style="margin-left:50px; font-weight: bold;"> $0 </span>'+
+                    '</div> '
+                ); 
+            });
+
+        
 
 
 });
@@ -87,24 +141,15 @@ function nextTab(elem) {
             let dif_indays = parseInt(dif_intime / (1000 * 3600 * 24));
 
             var cont_envios = 0;
-            if (dif_indays < dias_envios['express']) {
-                $("#envio_express").parent().parent().hide();
-            } else {
-                $("#envio_express").parent().parent().show();
-                cont_envios++;
-            }
-            if (dif_indays < dias_envios['normal']) {
-                $("#envio_normal").parent().parent().hide();
-            } else {
-                $("#envio_normal").parent().parent().show();
-                cont_envios++;
-            }
-            if (dif_indays < dias_envios['internacional']) {
-                $("#envio_internacional").parent().parent().hide();
-            } else {
-                $("#envio_internacional").parent().parent().show();
-                cont_envios++;
-            }
+            $.each(tipos_envio, function(index, item){
+                if (dif_indays < item.dias_habiles){
+                    $("#envio_" + index).parent().parent().hide();
+                }else{
+                    $("#envio_" + index).parent().parent().show();
+                    cont_envios++;
+                }
+
+            });
 
             if (cont_envios == 0) {
                 $(".tiposenvio_text").text("LO SENTIMOS. NO ES POSIBLE REALIZAR ENVÍO EN UNA FECHA TAN CERCANA.")
@@ -131,7 +176,6 @@ function nextTab(elem) {
     }
 }
 
-
 function prevTab(elem) {
     togo_step_id = $(elem).parent().prev().find('a[data-toggle="tab"]').attr("id");
     $(elem).parent().prev().find('a[data-toggle="tab"]').click();
@@ -148,12 +192,12 @@ function prevTab(elem) {
 
 function calcularResultado(input) {
     var valor = $(input).val();
-    if(valor=="")
-    $(input).val("0");
+    if (valor == "")
+        $(input).val("0");
     var clase = $(input).attr("id");
     var clase_arr = clase.split("_");
     var indice = clase_arr[1];
-    var precio = products[indice];
+    var precio = products[indice].unit_price;
     var total_prod = valor * precio;
     $(input).parent().parent().find(".resultado").text("$" + total_prod);
     cotizador_totals[indice] = total_prod;
@@ -175,7 +219,22 @@ function calcularResultado(input) {
     generar_opciones_pago(total);
 }
 
-$('#envio_normal, #envio_express, #envio_internacional').click(function () {
+
+const gettipoenvio = (input_radio) => {
+    var id_input = $(input_radio).attr("id");
+    var id_envio_selected= id_input.split('_')[1];
+    envio_selected = tipos_envio[id_envio_selected].keyword;
+
+    var text = $(".total").text();
+    var total = text.replace("$", '');
+
+    total= +total + +tipos_envio[id_envio_selected].price;
+    $("#total_conenvio").text("$" + total)
+    generar_opciones_pago(total);
+}
+
+
+/*$('#envio_normal, #envio_express, #envio_internacional').click(function () {
     var text = $(".total").text();
     var total = text.replace("$", '');
 
@@ -187,20 +246,21 @@ $('#envio_normal, #envio_express, #envio_internacional').click(function () {
         total = +total + 300;
     } else if ($("#envio_express").is(':checked')) {
         total = +total + 1000;
-    }else if ($("#envio_internacional").is(':checked')) {
+    } else if ($("#envio_internacional").is(':checked')) {
         total = +total + 5000;
     }
-    
+
     $("#total_conenvio").text("$" + total)
     generar_opciones_pago(total);
 });
+*/
 
 function generar_opciones_pago(total) {
     opciones_pagos[0] = (+total);
-    opciones_pagos[1] = ((+total)*1.2) / 3;
-    opciones_pagos[2] = ((+total)*1.3) / 6;
-    opciones_pagos[3] = ((+total)*1.4) / 9;
-    opciones_pagos[4] = ((+total)*1.5) / 12;
+    opciones_pagos[1] = ((+total) * 1.2) / 3;
+    opciones_pagos[2] = ((+total) * 1.3) / 6;
+    opciones_pagos[3] = ((+total) * 1.4) / 9;
+    opciones_pagos[4] = ((+total) * 1.5) / 12;
 
     $("#monto_pago_1").text("$" + opciones_pagos[0].toFixed(2));
     $("#monto_pago_3").text("$" + opciones_pagos[1].toFixed(2));
@@ -221,9 +281,9 @@ const validate_next = (step) => {
             }
             break;
         case 'step_2':
-            ready_togo = (validate_cotizador() && (envio_selected != null) );
+            ready_togo = (validate_cotizador() && (envio_selected != null));
             console.log(envio_selected);
-            if(!ready_togo){
+            if (!ready_togo) {
                 alert("Favor de seleccionar tanto productos como opción de envío. Gracias.");
             }
             break;
@@ -246,9 +306,9 @@ const validate_cotizador = () => {
         var tr_line = this;
         if ($(tr_line).attr("class") == 'product_line') {
             console.log($(tr_line).find('.cantidad').val());
-            if( $(tr_line).find('.cantidad').val() > 0 ){
+            if ($(tr_line).find('.cantidad').val() > 0) {
                 ready_togo = true;
-            }            
+            }
         }
     });
     return ready_togo;

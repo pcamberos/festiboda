@@ -126,114 +126,43 @@
               <div>
                 <table id="cotizador" class="cotizador">
                   <tbody>
-                  <tr class="product_line">
-                    <td style="width: 50px">
-                      <input type="number" min="0" value="0" onchange="calcularResultado(this);" 
-                      id="cantidad_0" class="cantidad"
-                        style=" width:60px; text-align: center; margin-top:5px;" />
-                    </td>
-                    <td style="width: 200px">
-                      <div> SANDALIAS </div>
-                    </td>
-                    <td style="width: 140px">
-                      <div class="precio"> $17 </div>
-                    </td>
-                    <td style="width: 80px">
-                      <div class="resultado"> $0 </div>
-                    </td>
-                  </tr>
-                  <tr class="product_line">
-                    <td style="width: 50px"> 
-                    <input type="number" min="0" value="0" onchange="calcularResultado(this);"
-                        id="cantidad_1"  class="cantidad" style=" width:60px;  text-align: center;" /> </td>
-                    <td style="width: 200px">
-                      <div> MANDILES </div>
-                    </td>
-                    <td style="width: 80px">
-                      <div class="precio"> $9 </div>
-                    </td>
-                    <td style="width: 80px">
-                      <div class="resultado"> $0 </div>
-                    </td>
-                  </tr>
-                  <tr class="product_line">
-                    <td style="width: 50px"> <input type="number" min="0" value="0" onchange="calcularResultado(this);"
-                        id="cantidad_2"  class="cantidad" style=" width:60px; text-align: center;" /> </td>
-                    <td style="width: 200px">
-                      <div> VELITOS </div>
-                    </td>
-                    <td style="width: 80px">
-                      <div class="precio"> $9 </div>
-                    </td>
-                    <td style="width: 80px">
-                      <div class="resultado"> $0 </div>
-                    </td>
-                  </tr>
-                  <tr class="product_line">
-                    <td style="width: 50px"> <input type="number" min="0" value="0" onchange="calcularResultado(this);"
-                        id="cantidad_3"  class="cantidad" style=" width:60px; text-align: center;" /> </td>
-                    <td style="width: 200px">
-                      <div> LETREROS </div>
-                    </td>
-                    <td style="width: 80px">
-                      <div class="precio"> $250 </div>
-                    </td>
-                    <td style="width: 80px">
-                      <div class="resultado"> $0 </div>
-                    </td>
-                  </tr>
-                  <tr class="subtotal">
-                    <td style="width: 80px;"> </td>
-                    <td style="width: 200px"> </td>
-                    <td style="width: 80px">
-                      <div style="margin-top:60px;"> SUBTOTAL: </div>
-                    </td>
-                    <td style="width: 80px">
-                      <div class="total" style="margin-top:60px; font-weight: bold;"> $0 </div>
-                    </td>
-                  </tr>
+                    <!-- TR autogeneradas desde JS-->
                 </tbody>
                 </table>
               </div>
 
               <div class="row" style="margin-top:50px; margin-left:05px;">
-                <table>
-                  <tr>
-                    <td>
-                      <div class="tiposenvio_text" style="margin-bottom:10px;">
-                          TENEMOS PARA TI DOS TIPOS DE ENVÍO:  
-                      </div>
-                      
-                      <div class="radio">
-                        <label><input type="radio" id="envio_normal" name="optradio" checked> ENVIO NORMAL (30 DIAS
-                          HABILES) $290
-                        </label>
-                      </div>
-                      <div class="radio">
-                        <label><input type="radio" id="envio_express" name="optradio"> ENVIO EXPRESS (15 DIAS HABILES)
-                          $1900 </label>
-                      </div>
-                      <div class="radio">
-                        <label><input type="radio" id="envio_internacional" name="optradio" checked> ENVIO INTERNACIONAL (50 DIAS
-                          HABILES) $5000
-                        </label>
-                      </div>
-                      <div class="total_cenv" style="margin-top:30px; margin-left:350px;">
-                        TOTAL: <span id="total_conenvio" style="margin-left:50px; font-weight: bold;"> $0 </span>
-                      </div>
-                    </td>
-                  </tr>
+                <table id ="tipos_envios" class ="tipos_envios">
+                  <tbody>
+                    <tr>
+                      <td>
+                        <div class="tiposenvio_text" style="margin-bottom:10px;">
+                            TENEMOS PARA TI DOS TIPOS DE ENVÍO:  
+                        </div>
+                        <!--div class="radio">
+                          <label><input type="radio" id="envio_normal" name="optradio" checked> ENVIO NORMAL (30 DIAS
+                            HABILES) $290
+                          </label>
+                        </div>
+                        
+                        <div class="radio">
+                          <label><input type="radio" id="envio_express" name="optradio"> ENVIO EXPRESS (15 DIAS HABILES)
+                            $1900 </label>
+                        </div>
+                        <div class="radio"><
+                          <label><input type="radio" id="envio_internacional" name="optradio" checked> ENVIO INTERNACIONAL (50 DIAS
+                            HABILES) $5000
+                          </label>
+                        </div>
+                        <div class="total_cenv" style="margin-top:30px; margin-left:350px;">
+                          TOTAL: <span id="total_conenvio" style="margin-left:50px; font-weight: bold;"> $0 </span>
+                        </div-->
+                      </td>
+                    </tr>
+                  </tbody>
                 </table>
               </div>
 
-              <!---ul class="pull-xs-right">
-                <li class="list-inline-item">
-                  <button type="button" class="btn btn-default prev-step">Previous</button>
-                </li>
-                <li class="list-inline-item">
-                  <button type="button" class="btn btn-primary next-step">Save and continue</button>
-                </li>
-              </ul-->
             </div>
 
             <!--
