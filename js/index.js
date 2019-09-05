@@ -1,15 +1,16 @@
-var products = new Array;
-var tipos_envio = new Array;
-
-var cotizador_totals = new Array;
-var opciones_pagos = new Array;
-var current_step_id = "";
-var togo_step_id = "";
-var envio_selected;
+let products = new Array;
+let tipos_envio = new Array;
+let full_cotizador = new Array;
+let cotizador_totals = new Array;
+let opciones_pagos = new Array;
+let current_step_id = "";
+let togo_step_id = "";
+let envio_selected;
+let id_envio_selected;
+let opcion_pago_selected;
 
 $(document).ready(function () {
     subtotal= 0;
-
 
     //Initialize tooltips
     $('.nav-tabs > li a[title]').tooltip();
@@ -25,18 +26,21 @@ $(document).ready(function () {
         var $active = $('.nav-tabs li>a.active');
         $active.parent().next().removeClass('disabled');
         nextTab($active);
-
     });
 
     $(".prev-step").click(function (e) {
         var $active = $('.nav-tabs li>a.active');
         prevTab($active);
-
     });
 
     $(".prev_button").hide();
 
-
+    $(".opcion_pago").click(function (e) {
+        let id_pago =  $(this).find(".monto_pago").attr("id");
+        opcion_pago_selected = id_pago.replace("monto_pago_","");
+        console.log( id_pago);
+    });
+    
     var date_input = $('input[name="date"]'); //our date input has the name "date"
     var container = $('.bootstrap-iso form').length > 0 ? $('.bootstrap-iso form').parent() : "body";
     var d = new Date();
@@ -65,7 +69,7 @@ $(document).ready(function () {
             $.each(myJson, function (index, item) {
                 $("#cotizador tbody").append('<tr class="product_line"> '+
                     '    <td style="width: 50px"> '+
-                    '    <input type="number" min="0" value="0" onchange="calcularResultado(this);"  '+
+                    '    <input type="number" min="0" value="2" onchange="calcularResultado(this);"  '+    // TESTING "VALOR 0"
                     '    id="cantidad_'+ index +'" class="cantidad" '+
                     '        style=" width:60px; text-align: center; margin-top:5px;" /> '+
                     '    </td> '+
@@ -79,8 +83,10 @@ $(document).ready(function () {
                     '    <div class="resultado"> $0 </div>'+
                     '    </td> '+
                     '</tr>');
+                    var cotizador_line = {productname: item.name, quantity: 0, unitprice: +item.unit_price  }
+                    full_cotizador.push(cotizador_line);
             });
-
+            
             $("#cotizador tbody").append('<tr class="subtotal"> '+
                     '<td style="width: 80px;"> </td> '+
                     '<td style="width: 200px"> </td> '+
@@ -92,7 +98,6 @@ $(document).ready(function () {
                     '</td> '+
                     '</tr>');
         });
-
 
         fetch('getTiposEnvio.php')
             .then(function (response) {
@@ -117,12 +122,26 @@ $(document).ready(function () {
                     '    TOTAL: <span id="total_conenvio" style="margin-left:50px; font-weight: bold;"> $0 </span>'+
                     '</div> '
                 ); 
+
             });
 
-        
 
-
+            setTimeout(() => {
+                testingInit()    
+            }, 1000);
+            
 });
+
+const testingInit = () => {
+    $("#cantidad_0").trigger("change");       // TESTING
+    $("#cantidad_1").trigger("change");       // TESTING
+    $("#cantidad_2").trigger("change");       // TESTING
+    $("#cantidad_3").trigger("change");       // TESTING
+    gettipoenvio($("#envio_1"));
+    $("#opcion_pago_1").prop("checked",true);
+    opcion_pago_selected = "1";
+    console.warn("End to testing Init!");
+}
 
 function nextTab(elem) {
     current_step_id = $(elem).attr("id");
@@ -130,8 +149,7 @@ function nextTab(elem) {
 
     if (validate_next(current_step_id)) {
         $(elem).parent().next().find('a[data-toggle="tab"]').click();
-        console.log("Validate NEXT");
-
+        
         if (togo_step_id == 'step_2') {
             $(".prev_button").show();
             var split_date = ($("#date").val()).split("/");
@@ -199,6 +217,7 @@ function calcularResultado(input) {
     var indice = clase_arr[1];
     var precio = products[indice].unit_price;
     var total_prod = valor * precio;
+    full_cotizador[indice].quantity = +valor;
     $(input).parent().parent().find(".resultado").text("$" + total_prod);
     cotizador_totals[indice] = total_prod;
 
@@ -206,6 +225,7 @@ function calcularResultado(input) {
     $.each(cotizador_totals, function (index, item) {
         subtotal += item;
     });
+    
     $(input).parent().parent().parent().find(".total").text("$" + subtotal);
 
     var total = subtotal;
@@ -217,12 +237,14 @@ function calcularResultado(input) {
 
     $("#total_conenvio").text("$" + total)
     generar_opciones_pago(total);
-}
 
+   /* console.warn("Full Cotizador..");
+    console.log(full_cotizador);*/
+}
 
 const gettipoenvio = (input_radio) => {
     var id_input = $(input_radio).attr("id");
-    var id_envio_selected= id_input.split('_')[1];
+    id_envio_selected= id_input.split('_')[1];
     envio_selected = tipos_envio[id_envio_selected].keyword;
 
     var text = $(".total").text();
@@ -232,7 +254,6 @@ const gettipoenvio = (input_radio) => {
     $("#total_conenvio").text("$" + total)
     generar_opciones_pago(total);
 }
-
 
 /*$('#envio_normal, #envio_express, #envio_internacional').click(function () {
     var text = $(".total").text();
@@ -281,23 +302,26 @@ const validate_next = (step) => {
             }
             break;
         case 'step_2':
-            ready_togo = (validate_cotizador() && (envio_selected != null));
-            console.log(envio_selected);
+            let validate_bool = validate_cotizador();
+            ready_togo = (validate_cotizador() && (envio_selected != null && envio_selected != ""));
             if (!ready_togo) {
                 alert("Favor de seleccionar tanto productos como opción de envío. Gracias.");
             }
             break;
         case 'step_3':
-            break;
+            if (opcion_pago_selected != null) {
+                ready_togo = true;
+            } else {
+                alert("Favor de escoger una opción de pago.");
+            }
+        break;
         case 'step_4':
             break;
         case 'step_5':
             break;
-
     }
     return ready_togo;
 }
-
 
 const validate_cotizador = () => {
     let ready_togo = false;
@@ -313,3 +337,4 @@ const validate_cotizador = () => {
     });
     return ready_togo;
 }
+

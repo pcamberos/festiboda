@@ -20,10 +20,6 @@ if (mysqli_num_rows($result) > 0) {
     }
  }
 
-
- 
-
-
 $conn->close();
 
 echo json_encode($tipos_envio);

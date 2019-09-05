@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title> Biénvenido a Festiboda </title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<style>
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0;
+  }
+
+  .products_table, .tiposenvio_table{
+    margin-top: 30px;
+  }
+
+  .products_table tr td{
+    width: 200px;
+    padding-top: 15px;
+  }
+
+  .tiposenvio_table tr td{
+    width: 200px;
+    padding-top: 15px;
+  }
+
+  .edit_field, .save_btn, .cancel_btn{
+    display: none;
+  }
+
+
+  .tipoenvio_name_edit{
+    width: 140px;
+  }
+
+  .tipoenvio_diashabiles_edit{
+    width: 100px;
+  }
+
+  .tipoenvio_precio_edit{
+    width: 60px;
+  }
+  
+</style>
+
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+    <div class="container">
+      <a class="navbar-brand" href="#"></a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+        aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">
+              <span class="sr-only">(current)</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#"></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#"></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#"></a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Content -->
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12" style="text-align:right">
+        <img src="img/festiboda.jpg" style="width: 200px;" alt="logo">
+      </div>
+    </div>
+
+
+    <div class="row" style="margin-left: 200px; width:1300px;">
+      <section style="width: 50%; height: 520px;">
+        <ul class="nav nav-tabs" role="tablist">
+
+          <li role="presentation" class="nav-item">
+            <a href="#step1" id="step_1" class="nav-link active" data-toggle="tab" aria-controls="step1" role="tab"
+              title="Step 1">
+              Productos
+            </a>
+          </li>
+
+          <li role="presentation" class="nav-item">
+            <a href="#step2" id="step_2" class="nav-link disable" data-toggle="tab" aria-controls="step2" role="tab"
+              title="Step 2">
+              Tipos de envío
+            </a>
+          </li>
+         
+
+        </ul>
+
+        <div role="form">
+          <div class="tab-content" style="margin-top: 20px;">
+            <div class="tab-pane active" role="tabpanel" id="step1">
+
+              <!--
+                PARTE 1 DEL TABULADOR
+              -->
+              <div>
+                <table id="products_table" class="products_table">
+                  <thead>
+                    <tr>
+                      <th> Nombre del Producto </th>
+                      <th> Precio Unitario</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                      <!-- TR autogeneradas desde JS-->
+                  </tbody>
+                </table>
+              </div>
+
+              
+            </div>
+
+            <!--
+              PARTE 2 DEL TABULADOR
+            -->
+            <div class="tab-pane" role="tabpanel" id="step2">
+              <div>
+                <table id="tiposenvio_table" class="tiposenvio_table">
+                    <thead>
+                        <tr>
+                          <th> Palabra Clave </th>
+                          <th> Tipo de envío </th>
+                          <th> Días hábiles </th>
+                          <th> Precio </th>
+                        </tr>
+                      </thead>
+                  <tbody>
+                    <!-- TR autogeneradas desde JS-->
+                </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <div style="margin-left:680px;">
+      <table>
+        <tr>
+          <td style="width:100px;">
+            <button type="button" class="btn btn-primary prev-step prev_button" style="margin-top:20px;"> Regresar
+            </button>
+          </td>
+          <td style="width:100px;">
+            <button type="button" class="btn btn-primary next-step next_button" style="margin-top:20px;">
+              Siguiente
+            </button>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="vendor/jquery/jquery.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css" />
+  <script src="js/admin.js"></script>
+</body>
+
+</html>
