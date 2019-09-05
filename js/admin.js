@@ -289,11 +289,11 @@ const guardarBtn = (input) => {
     if(data_type=='product'){
         let data_name = $(item_tr).find(".product_name_edit").text();
         let data_price = $(item_tr).find(".product_unit_price_edit").text();
+        
+
     }else if(data_type=='tipoenvio'){
 
     }
-
-
 
 
     console.log("Data Type: " + data_type);
