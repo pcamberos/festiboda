@@ -69,7 +69,7 @@ $(document).ready(function () {
             $.each(myJson, function (index, item) {
                 $("#cotizador tbody").append('<tr class="product_line"> '+
                     '    <td style="width: 50px"> '+
-                    '    <input type="number" min="0" value="2" onchange="calcularResultado(this);"  '+    // TESTING "VALOR 0"
+                    '    <input type="number" min="0" value="0" onchange="calcularResultado(this);"  '+    // TESTING "VALOR 0"
                     '    id="cantidad_'+ index +'" class="cantidad" '+
                     '        style=" width:60px; text-align: center; margin-top:5px;" /> '+
                     '    </td> '+
@@ -109,7 +109,7 @@ $(document).ready(function () {
                 $.each(tipos_envio,function(index, item){
                         $("#tipos_envios tbody tr td").append(
                             '<div class="radio">'+
-                            '    <label><input type="radio" onclick="gettipoenvio(this)" id="envio_'+  index +'" name="optradio" checked> '+  item.name +' ('+  item.dias_habiles +' DÍAS '+
+                            '    <label><input type="radio" onclick="gettipoenvio(this)" id="envio_'+  index +'" name="optradio"> '+  item.name +' ('+  item.dias_habiles +' DÍAS '+
                             '        HÁBILES) $'+  item.price +' '+
                             '    </label> '+
                             '</div> '
@@ -126,9 +126,9 @@ $(document).ready(function () {
             });
 
 
-            setTimeout(() => {
+            /*setTimeout(() => {
                 testingInit()    
-            }, 1000);
+            }, 1000);*/
             
 });
 
@@ -178,6 +178,11 @@ function nextTab(elem) {
             }
         }
 
+        if (togo_step_id == 'step_4') {
+            $(".next_button").text("Realizar Pago");
+        }
+
+
         if (togo_step_id == 'step_5') {
             $(".next_button").hide();
             $("#book").animate({
@@ -201,6 +206,10 @@ function prevTab(elem) {
 
     if (togo_step_id == 'step_1') {
         $(".prev_button").hide();
+    }
+    
+    if (togo_step_id == 'step_3') {
+        $(".next_button").text("Siguiente");
     }
 
     if (togo_step_id == 'step_4') {
