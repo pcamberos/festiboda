@@ -2,9 +2,7 @@ Conekta.setPublicKey('key_Cr9LHy6J8qZrwK8qGfGA63g');
 
 var conektaSuccessResponseHandler = function (token) {
   var $form = $("#card-form");
-  // Inserta el token_id en la forma para que se envíe al servidor
   $form.append($('<input type="hidden" name="conektaTokenId" id="conektaTokenId">').val(token.id));
-  //$form.get(0).submit(); // Hace submit
 
   const data = new FormData();
   let fullc = '{';
@@ -16,66 +14,42 @@ var conektaSuccessResponseHandler = function (token) {
   });
   fullc = fullc + "}";
 
-  let client_name = $("#client_name").val();
-  console.log("ClientName: " + client_name);
+  const client_name = $("#client_name").val();
 
   data.append('full_cotizador', fullc);
   data.append('client_name', client_name);
   data.append('costoenvio', +tipos_envio[id_envio_selected].price);
-  fetch('payConekta.php', {
+  data.append('fecha_evento', date_arr[2] + "-" + date_arr[1] + "-" + date_arr[0]);
+  data.append('envio_selected', envio_selected);
+  data.append('price_envio_selected', tipos_envio[id_envio_selected].price);
+  data.append('total', ($("#total_conenvio").text()).replace("$", ""));
+  data.append('num_pagos', opcion_pago_selected);
+  data.append('order_status', "Paid");
+  data.append('envio_calle', $("#envio_calle").val());
+  data.append('envio_numext', $("#envio_numext").val());
+  data.append('envio_numint', $("#envio_numint").val());
+  data.append('envio_cp', $("#envio_cp").val());
+  data.append('envio_tel', $("#envio_tel").val());
+  data.append('envio_cel', $("#envio_cel").val());
+  data.append('envio_referencia', $("#envio_referencia").val());
+  data.append('envio_municipio', $("#envio_municipio").val());
+  data.append('envio_estado', $("#envio_estado").val());
+  data.append('envio_pais', $("#envio_pais").val());
+
+  fetch('executeOrder.php', {
       method: 'POST',
       body: data
     })
     .then(function (response) {
-      if (response.ok) {
-        return response.text()
-      } else {
-        throw "Error en la llamada Ajax";
-      }
-
+      return response.text();
     })
-    .then(function (texto) {
-        console.warn("LISTO PARA GUARDAR LA ORDEN EN BD Y GENERAR FOLIO!");
-        let date_fieldvalue = $("#date").val();
-        date_arr = date_fieldvalue.split("/");
-        //alert(date_arr);
-
-        const order_data = new FormData();
-        order_data.append('client_name', client_name);
-        order_data.append('fecha_evento', date_arr[2] + "-" + date_arr[1] + "-" + date_arr[0]);
-        order_data.append('envio_selected', envio_selected);
-        order_data.append('price_envio_selected', tipos_envio[id_envio_selected].price);
-        order_data.append('total', ($("#total_conenvio").text()).replace("$","") );
-        order_data.append('num_pagos',  opcion_pago_selected);
-        order_data.append('order_status', "Paid" );
-        order_data.append('envio_calle', $("#envio_calle").val());
-        order_data.append('envio_numext', $("#envio_numext").val());
-        order_data.append('envio_numint', $("#envio_numint").val());
-        order_data.append('envio_cp', $("#envio_cp").val());
-        order_data.append('envio_tel', $("#envio_tel").val());
-        order_data.append('envio_cel', $("#envio_cel").val());
-        order_data.append('envio_referencia', $("#envio_referencia").val());
-        order_data.append('envio_municipio', $("#envio_municipio").val());
-        order_data.append('envio_estado', $("#envio_estado").val());
-        order_data.append('envio_pais', $("#envio_pais").val());
-
-        fetch('saveOrder.php', {
-            method: 'POST',
-            body: order_data
-          })
-          .then(function (response) {
-            return response.json();
-          })
-          .then(function (myJson) {
-            console.log(myJson);
-          });
-
-      })
-      .catch(function (err) {
-        console.log(err);
-      });
-
-    };
+    .then(function (text) {
+      console.log('Request successful', text);
+    })
+    .catch(function (error) {
+      log('Request failed', error)
+    });
+};
 
 var conektaErrorResponseHandler = function (response) {
   var $form = $("#card-form");

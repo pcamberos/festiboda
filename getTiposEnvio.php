@@ -10,7 +10,7 @@ if (!$conn) {
     die('Could not connect: ');
 }
 
-$sql = 'Select * From tipos_envio';
+$sql = 'Select * From tipos_envio  Order by date_created';
 $result = mysqli_query($conn, $sql);
 
 $tipos_envio = array();

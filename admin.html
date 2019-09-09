@@ -26,7 +26,7 @@
   }
 
   .products_table tr td{
-    width: 200px;
+    width: 250px;
     padding-top: 15px;
   }
 
@@ -35,7 +35,7 @@
     padding-top: 15px;
   }
 
-  .edit_field, .save_btn, .cancel_btn{
+  .edit_field, .save_btn, .cancel_btn, .data_type, .data_id{
     display: none;
   }
 
@@ -113,6 +113,7 @@
          
 
         </ul>
+        
 
         <div role="form">
           <div class="tab-content" style="margin-top: 20px;">
@@ -127,6 +128,9 @@
                     <tr>
                       <th> Nombre del Producto </th>
                       <th> Precio Unitario</th>
+                      <th>
+                        <button type="button" class="btn btn-primary create_prod_btn" onclick="createProduct()"> Agregar Producto </button>
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -150,6 +154,9 @@
                           <th> Tipo de envío </th>
                           <th> Días hábiles </th>
                           <th> Precio </th>
+                          <th>
+                            <button type="button" class="btn btn-primary create_tipoenvio_btn" onclick="createTipoEnvio()"> Agregar Tipo de envío </button>
+                          </th>
                         </tr>
                       </thead>
                   <tbody>
@@ -162,26 +169,12 @@
         </div>
       </section>
     </div>
-    <div style="margin-left:680px;">
-      <table>
-        <tr>
-          <td style="width:100px;">
-            <button type="button" class="btn btn-primary prev-step prev_button" style="margin-top:20px;"> Regresar
-            </button>
-          </td>
-          <td style="width:100px;">
-            <button type="button" class="btn btn-primary next-step next_button" style="margin-top:20px;">
-              Siguiente
-            </button>
-          </td>
-        </tr>
-      </table>
-    </div>
   </div>
 
   <!-- Bootstrap core JavaScript -->
   <script src="vendor/jquery/jquery.js"></script>
-  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="vendor/jquery/jquery-ui.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.js"></script>
   <script type="text/javascript"
     src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
   <link rel="stylesheet"

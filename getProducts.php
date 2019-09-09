@@ -10,7 +10,7 @@ if (!$conn) {
     die('Could not connect: ');
 }
 
-$sql = 'Select * From products';
+$sql = 'Select * From products Order by date_created';
 $result = mysqli_query($conn, $sql);
 
 $products = array();
