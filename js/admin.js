@@ -252,11 +252,26 @@ const editarBtn = (input) => {
         $(input).parent().parent().parent().find(".data_text").hide();
 
         // Botones
+        
         $(input).parent().parent().parent().find(".save_btn").show();
         $(input).parent().parent().parent().find(".cancel_btn").show();
 
         $(input).parent().parent().parent().find(".edit_btn").hide();
         $(input).parent().parent().parent().find(".delete_btn").hide();
+
+        $(".edit_btn").prop("disabled",true);
+        $(".delete_btn").prop("disabled",true);
+
+        if($(input).parent().parent().parent().attr('class') == 'product_line'  || $(input).parent().parent().parent().attr('class') == 'product_line_new'){
+            $("#step_2").prop("disabled",true);
+            $("#step_2").css("color","gray");
+            $(".create_prod_btn").prop("disabled",true);
+        }else if($(input).parent().parent().parent().attr('class') == 'tipoenvio_line'  || $(input).parent().parent().parent().attr('class') == 'tipoenvio_line_new'){
+            $("#step_1").prop("disabled",true);
+            $("#step_1").css("color","gray");
+            $(".create_tipoenvio_btn").prop("disabled",true);
+        }
+        
 
         edition_mode = true;
     } else {
@@ -278,6 +293,24 @@ const cancelarBtn = (input) => {
 
         $(input).parent().parent().parent().find(".edit_btn").show();
         $(input).parent().parent().parent().find(".delete_btn").show();
+        
+        $(".edit_btn").prop("disabled",false);
+        $(".delete_btn").prop("disabled",false);
+
+        if($(input).parent().parent().parent().attr('class') == 'product_line' || $(input).parent().parent().parent().attr('class') == 'product_line_new'){
+            $("#step_2").prop("disabled",false);
+            $("#step_2").css("color","blue");
+            $(".create_prod_btn").prop("disabled",false);
+        }else if($(input).parent().parent().parent().attr('class') == 'tipoenvio_line' || $(input).parent().parent().parent().attr('class') == 'tipoenvio_line_new'){
+            $("#step_1").prop("disabled",false);
+            $("#step_1").css("color","blue");
+            $(".create_tipoenvio_btn").prop("disabled",false);
+        }
+
+        if( $(input).parent().parent().parent().attr('class') == 'product_line_new'  || $(input).parent().parent().parent().attr('class') == 'tipoenvio_line_new'){
+            $(input).parent().parent().parent().remove();
+        }
+
         edition_mode = false;
     } else {
         alert("Nel Prro");
@@ -453,33 +486,38 @@ const createTipoEnvio = () => {
 
         '</tr>');
 
+        //$(".tipoenvio_line_new").find(".delete_btn").show();
+        //$(".tipoenvio_line_new").find(".cancel_btn").hide();
         $(".tipoenvio_line_new").find(".edit_btn").trigger("click");
 }
 
-const deleteBtn = (input) =>{
+const deleteBtn = (input) => {
+    let answer = confirm("¿Estas seguro de eliminar ese registro?");
 
-    //ConfirmDialog('Are you sure');
-    const item_tr = $(input).parent().parent().parent();
-    const data_type = $(item_tr).find(".data_type").text();
-    const data_id = $(item_tr).find(".data_id").text();
+    if (answer) {
+        //ConfirmDialog('Are you sure');
+        const item_tr = $(input).parent().parent().parent();
+        const data_type = $(item_tr).find(".data_type").text();
+        const data_id = $(item_tr).find(".data_id").text();
 
-    const item_data = new FormData();
-    item_data.append('data_id', data_id.trim());
-    item_data.append('data_type', data_type.trim());
+        const item_data = new FormData();
+        item_data.append('data_id', data_id.trim());
+        item_data.append('data_type', data_type.trim());
 
-    fetch('deleteItems.php', {
-        method: 'POST',
-        body: item_data
-      })
-      .then(function (response) {
-        return response.json();
-      })
-      .then(function (myJson) {
-        console.log(myJson);
-        if(myJson.success){
-           $(item_tr).remove();
-        }
-      });
+        fetch('deleteItems.php', {
+                method: 'POST',
+                body: item_data
+            })
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (myJson) {
+                console.log(myJson);
+                if (myJson.success) {
+                    $(item_tr).remove();
+                }
+            });
+    }
 
 }
 
