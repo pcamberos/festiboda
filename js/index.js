@@ -9,38 +9,38 @@ let envio_selected;
 let id_envio_selected;
 let opcion_pago_selected;
 
-$(document).ready(function () {
-    subtotal= 0;
+$(document).ready(function() {
+    subtotal = 0;
 
     //Initialize tooltips
     $('.nav-tabs > li a[title]').tooltip();
     //Wizard    
-    $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
+    $('a[data-toggle="tab"]').on('show.bs.tab', function(e) {
         var $target = $(e.target);
         if ($target.parent().hasClass('disabled')) {
             return false;
         }
     });
 
-    $(".next-step").click(function (e) {
+    $(".next-step").click(function(e) {
         var $active = $('.nav-tabs li>a.active');
         $active.parent().next().removeClass('disabled');
         nextTab($active);
     });
 
-    $(".prev-step").click(function (e) {
+    $(".prev-step").click(function(e) {
         var $active = $('.nav-tabs li>a.active');
         prevTab($active);
     });
 
     $(".prev_button").hide();
 
-    $(".opcion_pago").click(function (e) {
-        let id_pago =  $(this).find(".monto_pago").attr("id");
-        opcion_pago_selected = id_pago.replace("monto_pago_","");
-        console.log( id_pago);
+    $(".opcion_pago").click(function(e) {
+        let id_pago = $(this).find(".monto_pago").attr("id");
+        opcion_pago_selected = id_pago.replace("monto_pago_", "");
+        console.log(id_pago);
     });
-    
+
     var date_input = $('input[name="date"]'); //our date input has the name "date"
     var container = $('.bootstrap-iso form').length > 0 ? $('.bootstrap-iso form').parent() : "body";
     var d = new Date();
@@ -61,84 +61,78 @@ $(document).ready(function () {
     envio_selected = "";
 
     fetch('getProducts.php')
-        .then(function (response) {
+        .then(function(response) {
             return response.json();
         })
-        .then(function (myJson) {
+        .then(function(myJson) {
             products = myJson;
-            $.each(myJson, function (index, item) {
-                $("#cotizador tbody").append('<tr class="product_line"> '+
-                    '    <td style="width: 50px"> '+
-                    '    <input type="number" min="0" value="0" onchange="calcularResultado(this);"  '+    // TESTING "VALOR 0"
-                    '    id="cantidad_'+ index +'" class="cantidad" '+
-                    '        style=" width:60px; text-align: center; margin-top:5px;" /> '+
-                    '    </td> '+
-                    '    <td style="width: 200px"> '+
-                    '    <div> '+ item.name +' </div> '+
-                    '    </td> '+
-                    '    <td style="width: 140px"> '+
-                    '    <div class="precio"> $'+ item.unit_price +' </div> '+
-                    '    </td> '+
-                    '    <td style="width: 80px">'+
-                    '    <div class="resultado"> $0 </div>'+
-                    '    </td> '+
-                    '</tr>');
-                    var cotizador_line = {productname: item.name, quantity: 0, unitprice: +item.unit_price  }
-                    full_cotizador.push(cotizador_line);
+            $.each(myJson, function(index, item) {
+                $("#cotizador p").append('<div class=" product_line row"> ' +
+                    '    <div class="col-12 col-md-3"> ' +
+                    '    <input type="number" min="0" value="2" onchange="calcularResultado(this);"  ' + // TESTING "VALOR 0"
+                    '    id="cantidad_' + index + '" class="cantidad" ' +
+                    '        style=" width:60px; text-align: center; margin-top:5px;" /> ' +
+                    '    </div> ' +
+                    '    <div class="col-12 col-md-3"> ' +
+                    '    <div> ' + item.name + ' </div> ' +
+                    '    </div> ' +
+                    '    <div class="col-12 col-md-3 text-md-right"> ' +
+                    '    <div class="precio"> $' + item.unit_price + ' </div> ' +
+                    '    </div> ' +
+                    '    <div class="col-12 col-md-3 text-md-right">' +
+                    '    <div class="resultado"> $0 </div>' +
+                    '    </div> ' +
+                    '</div>');
+                var cotizador_line = { productname: item.name, quantity: 0, unitprice: +item.unit_price }
+                full_cotizador.push(cotizador_line);
             });
-            
-            $("#cotizador tbody").append('<tr class="subtotal"> '+
-                    '<td style="width: 80px;"> </td> '+
-                    '<td style="width: 200px"> </td> '+
-                    '<td style="width: 80px"> '+
-                    '<div style="margin-top:60px;"> SUBTOTAL: </div> '+
-                    '</td> '+
-                    '<td style="width: 80px"> '+
-                    '<div class="total" style="margin-top:60px; font-weight: bold;"> $0 </div> '+
-                    '</td> '+
-                    '</tr>');
+
+            $("#cotizador").append('<div class="subtotal row " > ' +
+                '<div class="d-inline-flex"> SUBTOTAL:&nbsp;</div> ' +
+                '<div class="total d-inline-flex pr-3" style="font-weight: bold;"> $0 </div> ' +
+                '</div>');
         });
 
-        fetch('getTiposEnvio.php')
-            .then(function (response) {
-                return response.json();
-            })
-            .then(function (myJson) {
-                tipos_envio = myJson;
+    fetch('getTiposEnvio.php')
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(myJson) {
+            tipos_envio = myJson;
 
-                $.each(tipos_envio,function(index, item){
-                        $("#tipos_envios tbody tr td").append(
-                            '<div class="radio">'+
-                            '    <label><input type="radio" onclick="gettipoenvio(this)" id="envio_'+  index +'" name="optradio"> '+  item.name +' ('+  item.dias_habiles +' DÍAS '+
-                            '        HÁBILES) $'+  item.price +' '+
-                            '    </label> '+
-                            '</div> '
-                            );
-                        //tipos_envio[item.keyword] = item.price;
-                    });
-
+            $.each(tipos_envio, function(index, item) {
                 $("#tipos_envios tbody tr td").append(
-                    ' <div class="total_cenv" style="margin-top:30px; margin-left:350px;">'+
-                    '    TOTAL: <span id="total_conenvio" style="margin-left:50px; font-weight: bold;"> $0 </span>'+
+                    '<div class="radio">' +
+                    '    <label><input type="radio" onclick="gettipoenvio(this)" id="envio_' + index + '" name="optradio" checked> ' + item.name + ' (' + item.dias_habiles + ' DÍAS ' +
+                    '        HÁBILES) $' + item.price + ' ' +
+                    '    </label> ' +
                     '</div> '
-                ); 
-
+                );
+                //tipos_envio[item.keyword] = item.price;
             });
 
+            $("#tipos_envios tbody tr td").append(
+                ' <div class="total_cenv" style="margin-top:30px; margin-left:350px;">' +
+                '    TOTAL: <span id="total_conenvio" style="margin-left:50px; font-weight: bold;"> $0 </span>' +
+                '</div> '
+            );
 
-            /*setTimeout(() => {
-                testingInit()    
-            }, 1000);*/
-            
+        });
+
+
+    /*setTimeout(() => {
+        testingInit()
+    }, 1000);*/
+
 });
 
 const testingInit = () => {
-    $("#cantidad_0").trigger("change");       // TESTING
-    $("#cantidad_1").trigger("change");       // TESTING
-    $("#cantidad_2").trigger("change");       // TESTING
-    $("#cantidad_3").trigger("change");       // TESTING
+    $("#cantidad_0").trigger("change"); // TESTING
+    $("#cantidad_1").trigger("change"); // TESTING
+    $("#cantidad_2").trigger("change"); // TESTING
+    $("#cantidad_3").trigger("change"); // TESTING
     gettipoenvio($("#envio_1"));
-    $("#opcion_pago_1").prop("checked",true);
+    $("#opcion_pago_1").prop("checked", true);
     opcion_pago_selected = "1";
     console.warn("End to testing Init!");
 }
@@ -149,7 +143,7 @@ function nextTab(elem) {
 
     if (validate_next(current_step_id)) {
         $(elem).parent().next().find('a[data-toggle="tab"]').click();
-        
+
         if (togo_step_id == 'step_2') {
             $(".prev_button").show();
             var split_date = ($("#date").val()).split("/");
@@ -159,10 +153,10 @@ function nextTab(elem) {
             let dif_indays = parseInt(dif_intime / (1000 * 3600 * 24));
 
             var cont_envios = 0;
-            $.each(tipos_envio, function(index, item){
-                if (dif_indays < item.dias_habiles){
+            $.each(tipos_envio, function(index, item) {
+                if (dif_indays < item.dias_habiles) {
                     $("#envio_" + index).parent().parent().hide();
-                }else{
+                } else {
                     $("#envio_" + index).parent().parent().show();
                     cont_envios++;
                 }
@@ -189,7 +183,7 @@ function nextTab(elem) {
                 opacity: 0.25,
                 left: "+=50",
                 height: "toggle"
-            }, 5000, function () {
+            }, 5000, function() {
                 // Animation complete.
             });
         }
@@ -231,11 +225,11 @@ function calcularResultado(input) {
     cotizador_totals[indice] = total_prod;
 
     var subtotal = 0;
-    $.each(cotizador_totals, function (index, item) {
+    $.each(cotizador_totals, function(index, item) {
         subtotal += item;
     });
-    
-    $(input).parent().parent().parent().find(".total").text("$" + subtotal);
+
+    $(".total").text("$" + subtotal);
 
     var total = subtotal;
     if ($("#envio_normal").is(':checked')) {
@@ -247,19 +241,19 @@ function calcularResultado(input) {
     $("#total_conenvio").text("$" + total)
     generar_opciones_pago(total);
 
-   /* console.warn("Full Cotizador..");
-    console.log(full_cotizador);*/
+    /* console.warn("Full Cotizador..");
+     console.log(full_cotizador);*/
 }
 
 const gettipoenvio = (input_radio) => {
     var id_input = $(input_radio).attr("id");
-    id_envio_selected= id_input.split('_')[1];
+    id_envio_selected = id_input.split('_')[1];
     envio_selected = tipos_envio[id_envio_selected].keyword;
 
     var text = $(".total").text();
     var total = text.replace("$", '');
 
-    total= +total + +tipos_envio[id_envio_selected].price;
+    total = +total + +tipos_envio[id_envio_selected].price;
     $("#total_conenvio").text("$" + total)
     generar_opciones_pago(total);
 }
@@ -323,7 +317,7 @@ const validate_next = (step) => {
             } else {
                 alert("Favor de escoger una opción de pago.");
             }
-        break;
+            break;
         case 'step_4':
             break;
         case 'step_5':
@@ -334,16 +328,12 @@ const validate_next = (step) => {
 
 const validate_cotizador = () => {
     let ready_togo = false;
-
-    $("#cotizador > tbody > tr").each(function () {
+    $("#cotizador p").each(function() {
         var tr_line = this;
-        if ($(tr_line).attr("class") == 'product_line') {
-            console.log($(tr_line).find('.cantidad').val());
-            if ($(tr_line).find('.cantidad').val() > 0) {
-                ready_togo = true;
-            }
+        console.log($(tr_line).find('.cantidad').val());
+        if ($(tr_line).find('.cantidad').val() > 0) {
+            ready_togo = true;
         }
     });
     return ready_togo;
 }
-
