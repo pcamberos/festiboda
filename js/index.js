@@ -76,10 +76,10 @@ $(document).ready(function() {
                     '    <div class="col-12 col-md-3"> ' +
                     '    <div> ' + item.name + ' </div> ' +
                     '    </div> ' +
-                    '    <div class="col-12 col-md-3 text-right"> ' +
+                    '    <div class="col-12 col-md-3 text-md-right"> ' +
                     '    <div class="precio"> $' + item.unit_price + ' </div> ' +
                     '    </div> ' +
-                    '    <div class="col-12 col-md-3 text-right">' +
+                    '    <div class="col-12 col-md-3 text-md-right">' +
                     '    <div class="resultado"> $0 </div>' +
                     '    </div> ' +
                     '</div>');
@@ -88,8 +88,8 @@ $(document).ready(function() {
             });
 
             $("#cotizador").append('<div class="subtotal row " > ' +
-                '<div class="d-inline-flex"> SUBTOTAL:   </div> ' +
-                '<div class="total d-inline-flex" style="font-weight: bold;"> $0 </div> ' +
+                '<div class="d-inline-flex"> SUBTOTAL:&nbsp;</div> ' +
+                '<div class="total d-inline-flex pr-3" style="font-weight: bold;"> $0 </div> ' +
                 '</div>');
         });
 
@@ -220,7 +220,7 @@ function calcularResultado(input) {
         subtotal += item;
     });
 
-    $(input).parent().parent().parent().find(".total").text("$" + subtotal);
+    $(".total").text("$" + subtotal);
 
     var total = subtotal;
     if ($("#envio_normal").is(':checked')) {
@@ -320,7 +320,6 @@ const validate_next = (step) => {
 const validate_cotizador = () => {
     let ready_togo = false;
     $("#cotizador p").each(function() {
-        alert($(this));
         var tr_line = this;
         console.log($(tr_line).find('.cantidad').val());
         if ($(tr_line).find('.cantidad').val() > 0) {
