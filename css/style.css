@@ -19,12 +19,15 @@ input[type=number]::-webkit-outer-spin-button {
     border-color: #58585a
 }
 
+#client_email,
 #client_name {
     max-width: 350px;
+    width: 100%;
 }
 
 #date {
     max-width: 200px;
+    width: 100%;
 }
 
 .subtotal.row {
