@@ -9,33 +9,33 @@ let envio_selected;
 let id_envio_selected;
 let opcion_pago_selected;
 
-$(document).ready(function() {
+$(document).ready(function () {
     subtotal = 0;
 
     //Initialize tooltips
     $('.nav-tabs > li a[title]').tooltip();
     //Wizard    
-    $('a[data-toggle="tab"]').on('show.bs.tab', function(e) {
+    $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
         var $target = $(e.target);
         if ($target.parent().hasClass('disabled')) {
             return false;
         }
     });
 
-    $(".next-step").click(function(e) {
+    $(".next-step").click(function (e) {
         var $active = $('.nav-tabs li>a.active');
         $active.parent().next().removeClass('disabled');
         nextTab($active);
     });
 
-    $(".prev-step").click(function(e) {
+    $(".prev-step").click(function (e) {
         var $active = $('.nav-tabs li>a.active');
         prevTab($active);
     });
 
     $(".prev_button").hide();
 
-    $(".opcion_pago").click(function(e) {
+    $(".opcion_pago").click(function (e) {
         let id_pago = $(this).find(".monto_pago").attr("id");
         opcion_pago_selected = id_pago.replace("monto_pago_", "");
         console.log(id_pago);
@@ -61,12 +61,12 @@ $(document).ready(function() {
     envio_selected = "";
 
     fetch('getProducts.php')
-        .then(function(response) {
+        .then(function (response) {
             return response.json();
         })
-        .then(function(myJson) {
+        .then(function (myJson) {
             products = myJson;
-            $.each(myJson, function(index, item) {
+            $.each(myJson, function (index, item) {
                 $("#cotizador p").append('<div class=" product_line row mb-3"> ' +
                     '    <div class="col-12 col-md-3"> ' +
                     '    <input type="number" min="0" value="0" onchange="calcularResultado(this);"  ' + // TESTING "VALOR 0"
@@ -75,7 +75,7 @@ $(document).ready(function() {
                     '    </div> ' +
                     '    <div class="col-12 col-md-3"> ' +
                     '    <div> ' + item.name + ' </div> ' +
-                    '    </div> ' + 
+                    '    </div> ' +
                     '    <div class="col-12 col-md-3 text-md-right"> ' +
                     '    <div class="precio"> $' + item.unit_price + ' </div> ' +
                     '    </div> ' +
@@ -83,7 +83,11 @@ $(document).ready(function() {
                     '    <div class="resultado"> $0 </div>' +
                     '    </div> ' +
                     '</div>');
-                var cotizador_line = { productname: item.name, quantity: 0, unitprice: +item.unit_price }
+                var cotizador_line = {
+                    productname: item.name,
+                    quantity: 0,
+                    unitprice: +item.unit_price
+                }
                 full_cotizador.push(cotizador_line);
             });
 
@@ -94,13 +98,13 @@ $(document).ready(function() {
         });
 
     fetch('getTiposEnvio.php')
-        .then(function(response) {
+        .then(function (response) {
             return response.json();
         })
-        .then(function(myJson) {
+        .then(function (myJson) {
             tipos_envio = myJson;
 
-            $.each(tipos_envio, function(index, item) {
+            $.each(tipos_envio, function (index, item) {
                 $("#tipos_envios tbody tr td").append(
                     '<div class="radio">' +
                     '    <label><input type="radio" onclick="gettipoenvio(this)" id="envio_' + index + '" name="tipoenvradio"> ' + item.name + ' (' + item.dias_habiles + ' DÍAS ' +
@@ -153,7 +157,7 @@ function nextTab(elem) {
             let dif_indays = parseInt(dif_intime / (1000 * 3600 * 24));
 
             var cont_envios = 0;
-            $.each(tipos_envio, function(index, item) {
+            $.each(tipos_envio, function (index, item) {
                 if (dif_indays < item.dias_habiles) {
                     $("#envio_" + index).parent().parent().hide();
                 } else {
@@ -183,7 +187,7 @@ function nextTab(elem) {
                 opacity: 0.25,
                 left: "+=50",
                 height: "toggle"
-            }, 5000, function() {
+            }, 5000, function () {
                 // Animation complete.
             });
         }
@@ -230,7 +234,7 @@ function calcularResultado(input) {
     });
 
     $(".total").text("$" + subtotal);
-    var total = subtotal 
+    var total = subtotal
     if (id_envio_selected)
         var total = +total + +tipos_envio[id_envio_selected].price;
 
@@ -290,19 +294,37 @@ function generar_opciones_pago(total) {
     $("#monto_pago_12").text("$" + opciones_pagos[4].toFixed(2));
 }
 
+
 const validate_next = (step) => {
     let ready_togo = false;
 
     switch (step) {
         case 'step_1':
-            if ($("#client_name").val() != "" && $("#date").val() != "") {
+            $('#client_name').removeClass('is-invalid');
+            $('#client_email').removeClass('is-invalid');
+            $('#date').removeClass('is-invalid');
+
+            if ($("#client_name").val() != "" && $("#date").val() != ""  && $("#client_email").val() != "" ) {
                 ready_togo = true;
+                $('.alert').hide();
             } else {
-                alert("Favor de llenar el formulario.");
+                $('.alert').text("Favor de llenar los campos correspondientes.");
+                $('.alert').fadeIn("slow", function () {});
+
+                if ($("#client_name").val() == "")
+                    $('#client_name').addClass('is-invalid');
+
+                if ($("#client_email").val() == "")
+                    $('#client_email').addClass('is-invalid');
+
+                if ($("#date").val() == "")
+                    $('#date').addClass('is-invalid');
+
+                //<span class="invalid-feedback" role="alert"><strong>mensaje de error</strong></span>
             }
+
             break;
         case 'step_2':
-            let validate_bool = validate_cotizador();
             ready_togo = (validate_cotizador() && (envio_selected != null && envio_selected != ""));
             if (!ready_togo) {
                 alert("Favor de seleccionar tanto productos como opción de envío. Gracias.");
@@ -325,7 +347,7 @@ const validate_next = (step) => {
 
 const validate_cotizador = () => {
     let ready_togo = false;
-    $("#cotizador p").each(function() {
+    $("#cotizador p").each(function () {
         var tr_line = this;
         console.log($(tr_line).find('.cantidad').val());
         if ($(tr_line).find('.cantidad').val() > 0) {
