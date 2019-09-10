@@ -300,6 +300,7 @@ const validate_next = (step) => {
 
     switch (step) {
         case 'step_1':
+            $('.alert').text("");
             $('#client_name').removeClass('is-invalid');
             $('#client_email').removeClass('is-invalid');
             $('#date').removeClass('is-invalid');
@@ -308,7 +309,7 @@ const validate_next = (step) => {
                 ready_togo = true;
                 $('.alert').hide();
             } else {
-                $('.alert').text("Favor de llenar los campos correspondientes.");
+                $('.alert').append("Favor de llenar los campos correspondientes.")
                 $('.alert').fadeIn("slow", function () {});
 
                 if ($("#client_name").val() == "")
@@ -325,16 +326,29 @@ const validate_next = (step) => {
 
             break;
         case 'step_2':
-            ready_togo = (validate_cotizador() && (envio_selected != null && envio_selected != ""));
-            if (!ready_togo) {
-                alert("Favor de seleccionar tanto productos como opción de envío. Gracias.");
+            $('.alert').text("");
+            let cot_validado = validate_cotizador();
+            let cot_tipoenvio = (envio_selected != null && envio_selected != "");
+            if (cot_validado && cot_tipoenvio) {
+                ready_togo = true;
+                $('.alert').hide();
+            } else {
+                if (!cot_validado)
+                    $('.alert').append("Es necesario seleccionar por lo menos un producto.</br>")
+                if (!cot_tipoenvio)
+                    $('.alert').append("No se ha especificado ningun tipo de envío.</br>")
+                $('.alert').fadeIn("slow", function () {});
             }
             break;
         case 'step_3':
-            if (opcion_pago_selected != null) {
+            $('.alert').text("");
+            let opcionpago_validado = (opcion_pago_selected != null && opcion_pago_selected != "");
+            if (opcionpago_validado) {
                 ready_togo = true;
+                $('.alert').hide();
             } else {
-                alert("Favor de escoger una opción de pago.");
+                $('.alert').append("No se ha especificado opción de pago.</br>");
+                $('.alert').fadeIn("slow", function () {});
             }
             break;
         case 'step_4':
