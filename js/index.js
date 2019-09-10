@@ -103,7 +103,7 @@ $(document).ready(function() {
             $.each(tipos_envio, function(index, item) {
                 $("#tipos_envios tbody tr td").append(
                     '<div class="radio">' +
-                    '    <label><input type="radio" onclick="gettipoenvio(this)" id="envio_' + index + '" name="optradio"> ' + item.name + ' (' + item.dias_habiles + ' DÍAS ' +
+                    '    <label><input type="radio" onclick="gettipoenvio(this)" id="envio_' + index + '" name="tipoenvradio"> ' + item.name + ' (' + item.dias_habiles + ' DÍAS ' +
                     '        HÁBILES) $' + item.price + ' ' +
                     '    </label> ' +
                     '</div> '
