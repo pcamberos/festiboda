@@ -69,7 +69,7 @@ $(document).ready(function() {
             $.each(myJson, function(index, item) {
                 $("#cotizador p").append('<div class=" product_line row"> ' +
                     '    <div class="col-12 col-md-3"> ' +
-                    '    <input type="number" min="0" value="2" onchange="calcularResultado(this);"  ' + // TESTING "VALOR 0"
+                    '    <input type="number" min="0" value="0" onchange="calcularResultado(this);"  ' + // TESTING "VALOR 0"
                     '    id="cantidad_' + index + '" class="cantidad" ' +
                     '        style=" width:60px; text-align: center; margin-top:5px;" /> ' +
                     '    </div> ' +
@@ -103,7 +103,7 @@ $(document).ready(function() {
             $.each(tipos_envio, function(index, item) {
                 $("#tipos_envios tbody tr td").append(
                     '<div class="radio">' +
-                    '    <label><input type="radio" onclick="gettipoenvio(this)" id="envio_' + index + '" name="optradio" checked> ' + item.name + ' (' + item.dias_habiles + ' DÍAS ' +
+                    '    <label><input type="radio" onclick="gettipoenvio(this)" id="envio_' + index + '" name="optradio" > ' + item.name + ' (' + item.dias_habiles + ' DÍAS ' +
                     '        HÁBILES) $' + item.price + ' ' +
                     '    </label> ' +
                     '</div> '
