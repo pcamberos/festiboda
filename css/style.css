@@ -76,3 +76,7 @@ button.btn-primary:hover {
     border-color: #58585a !important;
     box-shadow: none !important;
 }
+
+.alert{
+    display: none;
+}
