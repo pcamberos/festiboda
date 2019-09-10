@@ -75,7 +75,7 @@ $(document).ready(function() {
                     '    </div> ' +
                     '    <div class="col-12 col-md-3"> ' +
                     '    <div> ' + item.name + ' </div> ' +
-                    '    </div> ' +
+                    '    </div> ' + 
                     '    <div class="col-12 col-md-3 text-md-right"> ' +
                     '    <div class="precio"> $' + item.unit_price + ' </div> ' +
                     '    </div> ' +
@@ -103,7 +103,7 @@ $(document).ready(function() {
             $.each(tipos_envio, function(index, item) {
                 $("#tipos_envios tbody tr td").append(
                     '<div class="radio">' +
-                    '    <label><input type="radio" onclick="gettipoenvio(this)" id="envio_' + index + '" name="optradio" > ' + item.name + ' (' + item.dias_habiles + ' DÍAS ' +
+                    '    <label><input type="radio" onclick="gettipoenvio(this)" id="envio_' + index + '" name="optradio"> ' + item.name + ' (' + item.dias_habiles + ' DÍAS ' +
                     '        HÁBILES) $' + item.price + ' ' +
                     '    </label> ' +
                     '</div> '
@@ -225,18 +225,15 @@ function calcularResultado(input) {
     cotizador_totals[indice] = total_prod;
 
     var subtotal = 0;
-    $.each(cotizador_totals, function(index, item) {
+    $.each(cotizador_totals, function (index, item) {
         subtotal += item;
     });
 
     $(".total").text("$" + subtotal);
+    var total = subtotal 
+    if (id_envio_selected)
+        var total = +total + +tipos_envio[id_envio_selected].price;
 
-    var total = subtotal;
-    if ($("#envio_normal").is(':checked')) {
-        total = total + 300;
-    } else if ($("#envio_express").is(':checked')) {
-        total = total + 1000;
-    }
 
     $("#total_conenvio").text("$" + total)
     generar_opciones_pago(total);
