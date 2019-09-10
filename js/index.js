@@ -77,10 +77,10 @@ $(document).ready(function() {
                     '    <div onclick="myFunction(this,' + index + ')"> ' + item.name + '<i class="fa fa-sort-desc rotate-icon float-right d-block d-md-none"></i> </div> ' +
                     '    </div> ' +
                     '    <div class="col-6 col-md-3 text-md-right d-none d-md-block contenido' + index + '"> ' +
-                    '    <div class="precio"><div class="mt-2 d-none d-md-none contenido' + index + '">Precio unitario</div> $' + item.unit_price + ' </div> ' +
+                    '    <div class="precio"><div class="mt-2 d-none d-md-none font-weight-light contenido' + index + '">Precio unitario</div> $' + item.unit_price + ' </div> ' +
                     '    </div> ' +
                     '    <div class="col-6 col-md-3 text-md-right d-none d-md-block contenido' + index + '">' +
-                    '    <div class="mt-2 d-none d-md-none contenido' + index + '">Total</div><div class="resultado"> $0 </div>' +
+                    '    <div class="mt-2 d-none d-md-none font-weight-light contenido' + index + '">Total</div><div class="resultado"> $0 </div>' +
                     '    </div> ' +
                     '</div>');
                 var cotizador_line = {
@@ -93,7 +93,7 @@ $(document).ready(function() {
 
             $("#cotizador").append('<div class="subtotal row " > ' +
                 '<div class="d-inline-flex"> SUBTOTAL:&nbsp;</div> ' +
-                '<div class="total d-inline-flex pr-1 pr-md-3" style="font-weight: bold;"> $0 </div> ' +
+                '<div class="total d-inline-flex pr-1 pr-md-3 font-weight-bold" > $0 </div> ' +
                 '</div>');
         });
 
@@ -105,7 +105,7 @@ $(document).ready(function() {
             tipos_envio = myJson;
 
             $.each(tipos_envio, function(index, item) {
-                $("#tipos_envios tbody tr td").append(
+                $("#tipos_envios p").append(
                     '<div class="radio">' +
                     '    <label><input type="radio" onclick="gettipoenvio(this)" id="envio_' + index + '" name="tipoenvradio"> ' + item.name + ' (' + item.dias_habiles + ' DÍAS ' +
                     '        HÁBILES) $' + item.price + ' ' +
@@ -115,9 +115,9 @@ $(document).ready(function() {
                 //tipos_envio[item.keyword] = item.price;
             });
 
-            $("#tipos_envios tbody tr td").append(
-                ' <div class="total_cenv" style="margin-top:30px; margin-left:350px;">' +
-                '    TOTAL: <span id="total_conenvio" style="margin-left:50px; font-weight: bold;"> $0 </span>' +
+            $("#tipos_envios p").append(
+                ' <div class="total_cenv text-right pt-3 mt-3">' +
+                '    TOTAL: <span id="total_conenvio" style="margin-left:5px; font-weight: bold;"> $0 </span>' +
                 '</div> '
             );
 

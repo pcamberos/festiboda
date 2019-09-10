@@ -77,6 +77,10 @@ button.btn-primary:hover {
     box-shadow: none !important;
 }
 
-.alert{
+.total_cenv {
+    border-top: 1px solid #ccc;
+}
+
+.alert {
     display: none;
 }
