@@ -176,10 +176,6 @@ function nextTab(elem) {
             }
         }
 
-        if (togo_step_id == 'step_4') {
-            $(".next_button").text("Realizar Pago");
-        }
-
 
         if (togo_step_id == 'step_5') {
             $(".next_button").hide();
@@ -204,10 +200,6 @@ function prevTab(elem) {
 
     if (togo_step_id == 'step_1') {
         $(".prev_button").hide();
-    }
-
-    if (togo_step_id == 'step_3') {
-        $(".next_button").text("Siguiente");
     }
 
     if (togo_step_id == 'step_4') {
