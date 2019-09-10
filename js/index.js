@@ -67,11 +67,11 @@ $(document).ready(function() {
         .then(function(myJson) {
             products = myJson;
             $.each(myJson, function(index, item) {
-                $("#cotizador p").append('<div class=" product_line row"> ' +
+                $("#cotizador p").append('<div class=" product_line row mb-3"> ' +
                     '    <div class="col-12 col-md-3"> ' +
                     '    <input type="number" min="0" value="0" onchange="calcularResultado(this);"  ' + // TESTING "VALOR 0"
                     '    id="cantidad_' + index + '" class="cantidad" ' +
-                    '        style=" width:60px; text-align: center; margin-top:5px;" /> ' +
+                    '       /> ' +
                     '    </div> ' +
                     '    <div class="col-12 col-md-3"> ' +
                     '    <div> ' + item.name + ' </div> ' +
@@ -201,7 +201,7 @@ function prevTab(elem) {
     if (togo_step_id == 'step_1') {
         $(".prev_button").hide();
     }
-    
+
     if (togo_step_id == 'step_3') {
         $(".next_button").text("Siguiente");
     }

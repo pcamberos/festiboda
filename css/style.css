@@ -25,6 +25,11 @@ input[type=number]::-webkit-outer-spin-button {
     width: 100%;
 }
 
+.product_line:first-child,
+.product_line:nth-child(2n+3) {
+    background: #cccccc2e;
+}
+
 #date {
     max-width: 200px;
     width: 100%;
@@ -34,19 +39,40 @@ input[type=number]::-webkit-outer-spin-button {
     float: right;
 }
 
+.mes_tarjeta {
+    width: 61px;
+}
+
+.year_tarjeta {
+    width: 92px;
+}
+
+.token {
+    border-color: #f07d2d !important;
+    color: #272728 !important;
+    background-color: #fff !important;
+    border-radius: 5px;
+    padding: 6px;
+}
+
+.cantidad {
+    width: 60px;
+    text-align: center;
+}
+
 .btn-primary:not(:disabled):not(.disabled).active:focus,
 .btn-primary:not(:disabled):not(.disabled):active:focus,
 .show>.btn-primary.dropdown-toggle:focus,
 .btn-primary.focus,
 .btn-primary:focus,
 button.btn-primary {
-    background-color: #f07d2d;
-    border-color: #f07d2d;
-    box-shadow: none;
+    background-color: #f07d2d !important;
+    border-color: #f07d2d !important;
+    box-shadow: none !important;
 }
 
 button.btn-primary:hover {
-    background-color: #58585a;
-    border-color: #58585a;
-    box-shadow: none;
+    background-color: #58585a !important;
+    border-color: #58585a !important;
+    box-shadow: none !important;
 }
