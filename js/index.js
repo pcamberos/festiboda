@@ -68,18 +68,18 @@ $(document).ready(function() {
             products = myJson;
             $.each(myJson, function(index, item) {
                 $("#cotizador p").append('<div class=" product_line row mb-3"> ' +
-                    '    <div class="col-12 col-md-3"> ' +
+                    '    <div class="col-3 col-md-2 pl-2 pl-md-0"> ' +
                     '    <input type="number" min="0" value="0" onchange="calcularResultado(this);"  ' + // TESTING "VALOR 0"
                     '    id="cantidad_' + index + '" class="cantidad" ' +
                     '       /> ' +
                     '    </div> ' +
-                    '    <div class="col-12 col-md-3"> ' +
-                    '    <div> ' + item.name + ' </div> ' +
-                    '    </div> ' + 
-                    '    <div class="col-12 col-md-3 text-md-right"> ' +
+                    '    <div class="col-9 col-md-4"> ' +
+                    '    <div onclick="myFunction(this,contenido_' + index + ')"> ' + item.name + '<i class="fa fa-sort-desc rotate-icon float-right d-block d-md-none"></i> </div> ' +
+                    '    </div> ' +
+                    '    <div class="col-6 col-md-3 text-md-right d-none d-md-block contenido_' + index + '"> ' +
                     '    <div class="precio"> $' + item.unit_price + ' </div> ' +
                     '    </div> ' +
-                    '    <div class="col-12 col-md-3 text-md-right">' +
+                    '    <div class="col-6 col-md-3 text-md-right d-none d-md-block contenido_' + index + '">' +
                     '    <div class="resultado"> $0 </div>' +
                     '    </div> ' +
                     '</div>');
@@ -89,7 +89,7 @@ $(document).ready(function() {
 
             $("#cotizador").append('<div class="subtotal row " > ' +
                 '<div class="d-inline-flex"> SUBTOTAL:&nbsp;</div> ' +
-                '<div class="total d-inline-flex pr-3" style="font-weight: bold;"> $0 </div> ' +
+                '<div class="total d-inline-flex pr-1 pr-md-3" style="font-weight: bold;"> $0 </div> ' +
                 '</div>');
         });
 
@@ -225,12 +225,12 @@ function calcularResultado(input) {
     cotizador_totals[indice] = total_prod;
 
     var subtotal = 0;
-    $.each(cotizador_totals, function (index, item) {
+    $.each(cotizador_totals, function(index, item) {
         subtotal += item;
     });
 
     $(".total").text("$" + subtotal);
-    var total = subtotal 
+    var total = subtotal
     if (id_envio_selected)
         var total = +total + +tipos_envio[id_envio_selected].price;
 
@@ -333,4 +333,14 @@ const validate_cotizador = () => {
         }
     });
     return ready_togo;
+}
+
+function myFunction(valor, contenido) {
+    if ($(valor).find('.fa').hasClass('fa-sort-desc')) {
+        $(valor).find('.fa').removeClass('fa-sort-desc');
+        $(valor).find('.fa').addClass('fa-sort-asc');
+    } else {
+        $(valor).find('.fa').addClass('fa-sort-desc');
+        $(valor).find('.fa').removeClass('fa-sort-asc');
+    }
 }
