@@ -120,7 +120,18 @@ $(document).ready(function() {
                 '</div> '
             );
         });
+
+
+
 });
+
+const initTesting = () => {
+    setTimeout(() => {
+        /* Página 1 */
+        $("#client_name").val("Pablo Camberos");
+
+    }, 1500);
+}
 
 
 function nextTab(elem) {
@@ -290,10 +301,9 @@ const validate_next = (step) => {
         case 'step_1':
             $('.alert').text("");
             $('#client_name').removeClass('is-invalid');
-            $('#client_email').removeClass('is-invalid');
             $('#date').removeClass('is-invalid');
 
-            if ($("#client_name").val() != "" && $("#date").val() != "" && $("#client_email").val() != "") {
+            if ($("#client_name").val() != "" && $("#date").val() != "") {
                 ready_togo = true;
                 $('.alert').hide();
             } else {
@@ -303,13 +313,11 @@ const validate_next = (step) => {
                 if ($("#client_name").val() == "")
                     $('#client_name').addClass('is-invalid');
 
-                if ($("#client_email").val() == "") 
-                    $('#client_email').addClass('is-invalid');
-
                 if ($("#date").val() == "")
                     $('#date').addClass('is-invalid');
 
                 //<span class="invalid-feedback" role="alert"><strong>mensaje de error</strong></span>
+                //Correo electrónico
             }
 
             break;

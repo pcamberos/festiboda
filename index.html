@@ -26,8 +26,6 @@
                 </div>
             </div>
         </div>
-
-
         <div class="header_logo borde_head">
 
             <div class="container d-none">
@@ -84,15 +82,8 @@
                             <p style="margin-top:20px;">¿Cuál es tu nombre?</p>
                             <input id="client_name" class="mb-3 form-control" type="text" value="">
                         </div>
-
                         <div>
-                            <p>¿Cuál es tu Correo electrónico?</p>
-                            <input id="client_email" class="mb-3 form-control" type="email"
-                                value="">
-                        </div>
-
-                        <div>
-                            <p>¿Para cuando es tu evento?</p>
+                            <p>¿Para cuando es tu evento? </p>
                             <input class="form-control" id="date" name="date" placeholder="DD/MM/YYY" type="text"
                                 value="" />
                         </div>
@@ -138,15 +129,15 @@
 
                         <div>
                             <select class="browser-default custom-select" style="width: 50%">
-                                    <option value="" disabled > Elige tu método de pago </option>
-                                    <option value="1" selected> Tarjeta de débito </option>
-                                    <option value="2" disabled> Tarjeta de crédito  </option>
-                              </select>
+                                <option value="" disabled> Elige tu método de pago </option>
+                                <option value="1" selected> Tarjeta de débito </option>
+                                <option value="2" disabled> Tarjeta de crédito </option>
+                            </select>
                         </div>
 
                         <div class="radio opcion_pago mt-4">
                             <label>
-                                <input id="opcion_pago_1" type="radio" name="opcpagoradio" >
+                                <input id="opcion_pago_1" type="radio" name="opcpagoradio">
                                 1 Unico Pago de
                                 <span class="monto_pago" id="monto_pago_1">
                                     $0 </span>
@@ -201,6 +192,11 @@
                                             <input id="card_nombre" type="text" class="form-control" size="20"
                                                 data-conekta="card[name]" value="">
 
+                                        </div>
+
+                                        <div class="col-md-7">
+                                            <label>Correo electrónico</label>
+                                            <input id="client_email" class="mb-3 form-control" type="email" value="">
                                         </div>
                                         <div class="col-9">
                                             <label class="mt-3">Número de tarjeta de crédito</label>
@@ -350,7 +346,7 @@
                                     <td>
                                         <div> <input type="text" style="width:480px;"> </div>
                                     </td>
-                                </tr> 
+                                </tr>
 
                             </table>
                         </div>
