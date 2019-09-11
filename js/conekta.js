@@ -15,6 +15,8 @@ var conektaSuccessResponseHandler = function (token) {
   fullc = fullc + "}";
 
   const client_name = $("#client_name").val();
+  const date = $("#date").val();
+  const date_arr = date.split("/");
 
   data.append('full_cotizador', fullc);
   data.append('client_name', client_name);
@@ -41,13 +43,15 @@ var conektaSuccessResponseHandler = function (token) {
       body: data
     })
     .then(function (response) {
+      console.log(response);
       return response.text();
+      
     })
     .then(function (text) {
-      console.log('Request successful', text);
+      console.log(text);
     })
     .catch(function (error) {
-      log('Request failed', error)
+      console.log('Request failed', error)
     });
 };
 

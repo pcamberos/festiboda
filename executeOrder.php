@@ -4,24 +4,31 @@ $dbuser = "root";
 $dbpass = "estrasol";
 $db = "bd_festiboda";
 $conn = new mysqli($dbhost, $dbuser, $dbpass, $db) or die("Connect failed: %s\n" . $conn->error);
-$sql_arr = array(
-    "SQL" => $sql,
-    "success" => "",
-    "error" => ""
-);
 
 if (!$conn) {
     die('Could not connect: ');
 }
 $conn->autocommit(false);
 
+$cont = '00000000';
+$sqlcont = "
+SELECT LPAD( (count(*)+1), 7, 0) as cont From orden_compra; 
+";
+$contresult = $conn->query($sqlcont);
+if ($contresult->num_rows > 0) {
+    while ($row = $contresult->fetch_assoc()) {
+        $cont = $row['cont'];
+    }
+}
+
+//SELECT @cont := LPAD( (count(*)+1), 7, 0) as cont From orden_compra; 
+
 $sql_order = " 
-SELECT @cont := LPAD( (count(*)+1), 7, 0) as cont From orden_compra; 
 INSERT INTO orden_compra
     VALUES
     (
     UUID(),
-    '@cont',
+    'V" . $cont . "',
     '" . $_POST['client_name'] . "',
     '" . $_POST['fecha_evento'] . "',
     '" . $_POST['envio_selected'] . "',
@@ -39,13 +46,18 @@ INSERT INTO orden_compra
     '" . $_POST['envio_municipio'] . "',
     '" . $_POST['envio_estado'] . "',
     '" . $_POST['envio_pais'] . "',
-    NOW()
+    date(NOW())
     )
     ;
 ";
 
+$sql_arr = array(
+    "SQL" => $sql_order,
+    "success" => "",
+    "error" => ""
+);
 
-if ($conn->query($sql) === TRUE) {
+if ($conn->query($sql_order) === TRUE) {
     require_once("lib/Conekta.php");
     \Conekta\Conekta::setApiKey("key_Tq9owscXwXiRS1z7xPDPwg");
     \Conekta\Conekta::setApiVersion("2.0.0");
@@ -101,10 +113,10 @@ if ($conn->query($sql) === TRUE) {
                             //"monthly_installments" => 3,
                             "type" => "card",
                             "token_id" => "tok_test_visa_4242"
-                        ) 
-                    ) 
+                        )
+                    )
                 )
-            ) 
+            )
         );
         $conn->commit();
         $sql_arr['success'] = "Record updated successfully";

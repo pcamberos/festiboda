@@ -84,3 +84,7 @@ button.btn-primary:hover {
 .alert {
     display: none;
 }
+
+.token{
+    display:none;
+}

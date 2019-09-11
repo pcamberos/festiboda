@@ -38,7 +38,6 @@ $(document).ready(function() {
     $(".opcion_pago").click(function(e) {
         let id_pago = $(this).find(".monto_pago").attr("id");
         opcion_pago_selected = id_pago.replace("monto_pago_", "");
-        console.log(id_pago);
     });
 
     var date_input = $('input[name="date"]'); //our date input has the name "date"
@@ -120,74 +119,64 @@ $(document).ready(function() {
                 '    TOTAL: <span id="total_conenvio" style="margin-left:5px; font-weight: bold;"> $0 </span>' +
                 '</div> '
             );
-
         });
-
-
-    /*setTimeout(() => {
-        testingInit()
-    }, 1000);*/
-
 });
 
-const testingInit = () => {
-    $("#cantidad_0").trigger("change"); // TESTING
-    $("#cantidad_1").trigger("change"); // TESTING
-    $("#cantidad_2").trigger("change"); // TESTING
-    $("#cantidad_3").trigger("change"); // TESTING
-    gettipoenvio($("#envio_1"));
-    $("#opcion_pago_1").prop("checked", true);
-    opcion_pago_selected = "1";
-    console.warn("End to testing Init!");
-}
 
 function nextTab(elem) {
     current_step_id = $(elem).attr("id");
     togo_step_id = $(elem).parent().next().find('a[data-toggle="tab"]').attr("id");
 
     if (validate_next(current_step_id)) {
-        $(elem).parent().next().find('a[data-toggle="tab"]').click();
+        switch (togo_step_id) {
+            case 'step_1':
+                break;
+            case 'step_2':
+                $(".prev_button").show();
+                var split_date = ($("#date").val()).split("/");
+                const date1 = new Date();
+                const date2 = new Date(split_date['1'] + "/" + split_date['0'] + "/" + split_date['2']);
+                let dif_intime = date2.getTime() - date1.getTime();
+                let dif_indays = parseInt(dif_intime / (1000 * 3600 * 24));
 
-        if (togo_step_id == 'step_2') {
-            $(".prev_button").show();
-            var split_date = ($("#date").val()).split("/");
-            const date1 = new Date();
-            const date2 = new Date(split_date['1'] + "/" + split_date['0'] + "/" + split_date['2']);
-            let dif_intime = date2.getTime() - date1.getTime();
-            let dif_indays = parseInt(dif_intime / (1000 * 3600 * 24));
+                var cont_envios = 0;
+                $.each(tipos_envio, function (index, item) {
+                    if (dif_indays < item.dias_habiles) {
+                        $("#envio_" + index).parent().parent().hide();
+                    } else {
+                        $("#envio_" + index).parent().parent().show();
+                        cont_envios++;
+                    }
 
-            var cont_envios = 0;
-            $.each(tipos_envio, function(index, item) {
-                if (dif_indays < item.dias_habiles) {
-                    $("#envio_" + index).parent().parent().hide();
+                });
+
+                if (cont_envios == 0) {
+                    $(".tiposenvio_text").text("LO SENTIMOS. NO ES POSIBLE REALIZAR ENVÍO EN UNA FECHA TAN CERCANA.")
+                } else if (cont_envios == 1) {
+                    $(".tiposenvio_text").text("TENEMOS PARA TI EL SIGUIENTE TIPO DE ENVÍO:")
                 } else {
-                    $("#envio_" + index).parent().parent().show();
-                    cont_envios++;
+                    $(".tiposenvio_text").text(" TENEMOS PARA TI " + cont_envios + " TIPOS DE ENVÍO:  ")
                 }
+                $(elem).parent().next().find('a[data-toggle="tab"]').click();
+                break;
+            case 'step_3':
+                $(elem).parent().next().find('a[data-toggle="tab"]').click();
+                break;
+            case 'step_4':
+                $(".next_button").text("COMPLETAR PAGO");
+                $(".next_button").click(function(){
+                    $("#card-form").trigger("submit");
+                });
+                $(elem).parent().next().find('a[data-toggle="tab"]').click();
+                break;
+            case 'step_5':
 
-            });
+                $(".next_button").hide();
+                break;
 
-            if (cont_envios == 0) {
-                $(".tiposenvio_text").text("LO SENTIMOS. NO ES POSIBLE REALIZAR ENVÍO EN UNA FECHA TAN CERCANA.")
-            } else if (cont_envios == 1) {
-                $(".tiposenvio_text").text("TENEMOS PARA TI EL SIGUIENTE TIPO DE ENVÍO:")
-            } else {
-                $(".tiposenvio_text").text(" TENEMOS PARA TI " + cont_envios + " TIPOS DE ENVÍO:  ")
-            }
+            default:
+                break;
         }
-
-
-        if (togo_step_id == 'step_5') {
-            $(".next_button").hide();
-            $("#book").animate({
-                opacity: 0.25,
-                left: "+=50",
-                height: "toggle"
-            }, 5000, function() {
-                // Animation complete.
-            });
-        }
-
     } else {
         //alert("Favor de llenar el formulario.");
     }
@@ -197,14 +186,23 @@ function prevTab(elem) {
     togo_step_id = $(elem).parent().prev().find('a[data-toggle="tab"]').attr("id");
     $(elem).parent().prev().find('a[data-toggle="tab"]').click();
 
-
-    if (togo_step_id == 'step_1') {
-        $(".prev_button").hide();
+    switch (togo_step_id) {
+        case 'step_1':
+            $(".prev_button").hide();
+            break;
+        case 'step_2':
+            break;
+        case 'step_3':
+            $(".next_button").text("Continuar");
+            break;
+        case 'step_4':
+            $(".next_button").show();
+            break;
+        default:
+            break;
     }
 
-    if (togo_step_id == 'step_4') {
-        $(".next_button").show();
-    }
+
 }
 
 function calcularResultado(input) {
@@ -233,9 +231,6 @@ function calcularResultado(input) {
 
     $("#total_conenvio").text("$" + total)
     generar_opciones_pago(total);
-
-    /* console.warn("Full Cotizador..");
-     console.log(full_cotizador);*/
 }
 
 const gettipoenvio = (input_radio) => {
@@ -257,7 +252,6 @@ const gettipoenvio = (input_radio) => {
 
     var id = $(this).attr('id');
     envio_selected = id.split('_')[1];
-    console.log("Envío selected: " + envio_selected);
 
     if ($("#envio_normal").is(':checked')) {
         total = +total + 300;
@@ -344,6 +338,48 @@ const validate_next = (step) => {
             }
             break;
         case 'step_4':
+            // VALIDANDO DATOS DE PAGO
+            $('.alert').text("");
+            let valid_nombre = ($("#card_nombre").val() != null && $("#card_nombre").val() != "");
+            let valid_tarjeta = ($("#card_tarjeta").val() != null && $("#card_tarjeta").val() != "");
+            let valid_CVC = ($("#card_cvc").val() != null && $("#card_cvc").val() != "");
+            let valid_mesexp = ($("#card_mesexp").val() != null && $("#card_mesexp").val() != "");
+            let valid_anioexp = ($("#card_anioexp").val() != null && $("#card_anioexp").val() != "");
+
+            $('#card_nombre').removeClass('is-invalid');
+            $('#card_tarjeta').removeClass('is-invalid');
+            $('#card_cvc').removeClass('is-invalid');
+            $('#card_mesexp').removeClass('is-invalid');
+            $('#card_anioexp').removeClass('is-invalid');
+
+            if (valid_nombre && valid_tarjeta && valid_CVC && valid_mesexp && valid_anioexp) {
+                ready_togo = true;
+                $('.alert').hide();
+            } else {
+                if (!valid_nombre) {
+                    $('.alert').append("No se ha especificado el nombre de la tarjeta.</br>")
+                    $('#card_nombre').addClass('is-invalid');
+                }
+                if (!valid_tarjeta) {
+                    $('.alert').append("No se ha especificado el número de la tarjeta.</br>")
+                    $('#card_tarjeta').addClass('is-invalid');
+                }
+                if (!valid_CVC) {
+                    $('.alert').append("No se ha especificado el CVC de la tarjeta.</br>")
+                    $('#card_cvc').addClass('is-invalid');
+                }
+                if (!valid_mesexp) {
+                    $('.alert').append("No se ha especificado el mes de expiración de la tarjeta.</br>")
+                    $('#card_mesexp').addClass('is-invalid');
+                }
+                if (!valid_anioexp) {
+                    $('.alert').append("No se ha especificado el año de expiración de la tarjeta.</br>")
+                    $('#card_anioexp').addClass('is-invalid');
+                }
+                $('.alert').fadeIn("slow", function () {});
+            }
+
+
             break;
         case 'step_5':
             break;
@@ -353,9 +389,8 @@ const validate_next = (step) => {
 
 const validate_cotizador = () => {
     let ready_togo = false;
-    $("#cotizador p").each(function() {
+    $("#cotizador p .product_line").each(function() {
         var tr_line = this;
-        console.log($(tr_line).find('.cantidad').val());
         if ($(tr_line).find('.cantidad').val() > 0) {
             ready_togo = true;
         }
