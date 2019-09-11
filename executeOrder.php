@@ -1,4 +1,12 @@
 <?php
+// Import PHPMailer classes into the global namespace
+// These must be at the top of your script, not inside a function
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+// Load Composer's autoloader
+require 'vendor/autoload.php';
+
 $dbhost = "localhost";
 $dbuser = "root";
 $dbpass = "estrasol";
@@ -51,9 +59,11 @@ INSERT INTO orden_compra
     ;
 ";
 
+$folio = "V" . $cont;
 $sql_arr = array(
     "SQL" => $sql_order,
     "success" => "",
+    "folio" => $folio,
     "error" => ""
 );
 
@@ -120,6 +130,52 @@ if ($conn->query($sql_order) === TRUE) {
         );
         $conn->commit();
         $sql_arr['success'] = "Record updated successfully";
+
+        
+        $mail = new PHPMailer(true);
+
+        try {
+            //Server settings
+            $mail->SMTPDebug = 2;                                       // Enable verbose debug output
+            $mail->isSMTP();                                            // Set mailer to use SMTP
+            $mail->Host       = 'democrm7.estrasol.com.mx';  // Specify main and backup SMTP servers
+            $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
+            $mail->Username   = 'pruebas@democrm7.estrasol.com.mx';                     // SMTP username
+            $mail->Password   = '%.zyzf5jW(X8';                               // SMTP password
+            $mail->SMTPSecure = 'tls';                                  // Enable TLS encryption, `ssl` also accepted
+            $mail->Port       = 587;                                    // TCP port to connect to
+
+            //Recipients
+            $mail->setFrom('pruebas@democrm7.estrasol.com.mx', 'FESTIBODA');
+            $mail->addAddress('juan.camberos@estrasol.com.mx',  $_POST['client_name']);     // Add a recipient
+            //$mail->addAddress('ajuarez@estrasol.com.mx');               // Name is optional
+            //$mail->addReplyTo('info@example.com', 'Information');
+            //$mail->addCC('cc@example.com');
+            //$mail->addBCC('bcc@example.com');
+
+            // Attachments
+            //$mail->addAttachment('/var/tmp/file.tar.gz');         // Add attachments
+            //$mail->addAttachment('/tmp/image.jpg', 'new.jpg');    // Optional name
+
+            // Content
+            $mail->isHTML(true);                                  // Set email format to HTML
+            $mail->Subject = 'GRACIAS POR TU COMPRA!';
+            $msg_body = 'Tu pago se ha realizado con éxito! ';
+            $msg_body .= '<br>Con el siguiente folio: <b>V' . $cont . "</b>";
+            $msg_body .= "<br><br>Productos en la compra:";
+            foreach($line_items as $item){
+                $msg_body .= "<br>". $item['name'] . " $" . $item['unit_price'];
+            }
+            $msg_body .= "Por un total de: $" . $_POST['total'];
+
+
+            $mail->Body  = $msg_body;
+            //$mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+
+            $mail->send();
+        } catch (Exception $e) {
+            echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+        }
     } catch (\Conekta\ProcessingError $error) {
         $conn->rollback();
         echo $error->getMessage();

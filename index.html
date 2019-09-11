@@ -34,7 +34,8 @@
                 <ul class="nav nav-tabs" role="tablist">
 
                     <li role="presentation" class="nav-item">
-                        <a href="#step1" id="step_1" class="nav-link active" data-toggle="tab" aria-controls="step1" role="tab" title="Step 1">
+                        <a href="#step1" id="step_1" class="nav-link active" data-toggle="tab" aria-controls="step1"
+                            role="tab" title="Step 1">
                             Paso 1
                         </a>
                     </li>
@@ -58,7 +59,6 @@
                             Paso 4
                         </a>
                     </li>
-
                     <li role="presentation" class="nav-item">
                         <a href="#step5" id="step_5" class="nav-link
                                 disable" data-toggle="tab" aria-controls="step5" role="tab" title="Step 5">
@@ -87,12 +87,14 @@
 
                         <div>
                             <p>¿Cuál es tu Correo electrónico?</p>
-                            <input id="client_email" class="mb-3 form-control" type="email" value="juan.camberos@estrasol.com.mx">
+                            <input id="client_email" class="mb-3 form-control" type="email"
+                                value="juan.camberos@estrasol.com.mx">
                         </div>
 
                         <div>
                             <p>¿Paracuando es tu evento?</p>
-                            <input class="form-control" id="date" name="date" placeholder="DD/MM/YYY" type="text" value="10/12/2019" />
+                            <input class="form-control" id="date" name="date" placeholder="DD/MM/YYY" type="text"
+                                value="10/12/2019" />
                         </div>
                     </div>
 
@@ -134,9 +136,17 @@
                         <h3> Nos encantaría ser parte de tu evento!!</h3>
                         <p>Tenemos opciones de pagos para ti :)</p>
 
+                        <div>
+                            <select class="browser-default custom-select" style="width: 50%">
+                                    <option value="" disabled > Elige tu método de pago </option>
+                                    <option value="1" selected> Tarjeta de débito </option>
+                                    <option value="2" disabled> Tarjeta de crédito  </option>
+                              </select>
+                        </div>
+
                         <div class="radio opcion_pago mt-4">
                             <label>
-                                <input id="opcion_pago_1" type="radio" name="opcpagoradio">
+                                <input id="opcion_pago_1" type="radio" name="opcpagoradio" >
                                 1 Unico Pago de
                                 <span class="monto_pago" id="monto_pago_1">
                                     $0 </span>
@@ -144,7 +154,7 @@
                         </div>
                         <div class="radio opcion_pago mt-2">
                             <label>
-                                <input id="opcion_pago_3" type="radio" name="opcpagoradio">
+                                <input id="opcion_pago_3" type="radio" name="opcpagoradio" disabled>
                                 3 Pagos de
                                 <span class="monto_pago" id="monto_pago_3">
                                     $0 </span>
@@ -152,7 +162,7 @@
                         </div>
                         <div class="radio opcion_pago mt-2">
                             <label>
-                                <input id="opcion_pago_6" type="radio" name="opcpagoradio">
+                                <input id="opcion_pago_6" type="radio" name="opcpagoradio" disabled>
                                 6 Pagos de
                                 <span class="monto_pago" id="monto_pago_6">
                                     $0 </span>
@@ -160,7 +170,7 @@
                         </div>
                         <div class="radio opcion_pago mt-2">
                             <label>
-                                <input id="opcion_pago_9" type="radio" name="opcpagoradio">
+                                <input id="opcion_pago_9" type="radio" name="opcpagoradio" disabled>
                                 9 Pagos de
                                 <span class="monto_pago" id="monto_pago_9">
                                     $0 </span>
@@ -168,7 +178,7 @@
                         </div>
                         <div class="radio opcion_pago mt-2">
                             <label>
-                                <input id="opcion_pago_12" type="radio" name="opcpagoradio">
+                                <input id="opcion_pago_12" type="radio" name="opcpagoradio" disabled>
                                 12 Pagos de
                                 <span class="monto_pago" id="monto_pago_12">
                                     $0 </span>
@@ -179,7 +189,7 @@
                     <!-- PARTE 4 DEL TABULADOR -->
 
                     <div class="tab-pane" role="tabpanel" id="step4">
-                        <h3> Vamo a pagar! </h3>
+                        <h3> Pago con tarjeta de crédito/débito. </h3>
 
                         <form action="" method="POST" id="card-form" class="mt-4">
                             <span class="card-errors"></span>
@@ -188,25 +198,32 @@
                                     <div class="row">
                                         <div class="col-12">
                                             <label>Nombre del tarjetahabiente</label>
-                                            <input id="card_nombre" type="text" class="form-control" size="20" data-conekta="card[name]" value="Pablo Camberos">
+                                            <input id="card_nombre" type="text" class="form-control" size="20"
+                                                data-conekta="card[name]" value="Pablo Camberos">
 
                                         </div>
                                         <div class="col-9">
                                             <label class="mt-3">Número de tarjeta de crédito</label>
-                                            <input id="card_tarjeta" type="number" class="form-control" size="20" data-conekta="card[number]" value="4242424242424242">
+                                            <input id="card_tarjeta" type="number" class="form-control" size="20"
+                                                data-conekta="card[number]" value="4242424242424242">
 
                                         </div>
                                         <div class="col-3 pl-0">
 
                                             <label class="mt-3">CVC</label>
-                                            <input id="card_cvc" type="number" class="form-control" size="4" data-conekta="card[cvc]" value="123">
+                                            <input id="card_cvc" type="number" class="form-control" size="4"
+                                                data-conekta="card[cvc]" value="123">
 
                                         </div>
                                         <div class="col-12">
                                             <label class="mt-3 d-block">Fecha de expiración (MM/AAAA)</label>
-                                            </label><input id="card_mesexp" type="number" size="2" data-conekta="card[exp_month]" value="08" class="mes_tarjeta form-control d-inline-flex">
+                                            </label><input id="card_mesexp" type="number" size="2"
+                                                data-conekta="card[exp_month]" value="08"
+                                                class="mes_tarjeta form-control d-inline-flex">
                                             <span class="d-inline-flex">/</span>
-                                            <input id="card_anioexp" type="number" size="4" data-conekta="card[exp_year]" value="2021" class="year_tarjeta form-control d-inline-flex">
+                                            <input id="card_anioexp" type="number" size="4"
+                                                data-conekta="card[exp_year]" value="2021"
+                                                class="year_tarjeta form-control d-inline-flex">
                                         </div>
                                         <div class="col-12 mt-3"><button type="submit" class="token">Crear
                                                 token</button></div>
@@ -224,18 +241,17 @@
 
 
 
-                    <!--
-              PARTE 5 DEL TABULADOR
-            -->
+                    <!-- PARTE 5 DEL TABULADOR -->
                     <div class="tab-pane" role="tabpanel" id="step5">
-                        <h2 style="text-align: center;"> MUCHAS GRACIAS <br> POR TU PAGO </h2>
-                        <h4 style="text-align: center; color: darkred">
-                            DATOS DE ENVÍO </h4>
-
+                        <h4 style="text-align: left;"> MUCHAS GRACIAS <br> </h4>
+                        <h4 style="text-align: left;"> TU PAGO SE HA REALIZADO CON ÉXITO <br> </h4>
+                        <h4 style="text-align: left;"> FOLIO: <span id="folio"> ## </span> </h4>
+                        <h4 style="text-align: left; color: darkred">
+                            Para proceder, favor de especificar tus datos de envío. </h4>
                         <div>
                             <table>
                                 <tr>
-                                    <td style="width:140px;">
+                                    <td style="width:80px;">
                                         <div style="text-align:right;margin-right:
                                                 15px;"> Nombre: </div>
                                     </td>
@@ -244,7 +260,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="width:140px;">
+                                    <td style="width:80px;">
                                         <div id="envio_calle" style="text-align:right;margin-right:
                                                 15px;"> Calle: </div>
                                     </td>
@@ -253,7 +269,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="width:140px;">
+                                    <td style="width:80px;">
                                         <div id="envio_numext" style="text-align:right;margin-right:
                                                 15px;"> Num ext: </div>
                                     </td>
@@ -262,7 +278,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="width:140px;">
+                                    <td style="width:80px;">
                                         <div id="envio_numint" style="text-align:right;margin-right:
                                                 15px;"> Num int: </div>
                                     </td>
@@ -271,7 +287,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="width:140px;">
+                                    <td style="width:80px;">
                                         <div id="envio_cp" style="text-align:right;margin-right:
                                                 15px;"> C.P.: </div>
                                     </td>
@@ -281,7 +297,7 @@
                                 </tr>
 
                                 <tr>
-                                    <td style="width:140px;">
+                                    <td style="width:80px;">
                                         <div id="envio_tel" style="text-align:right;margin-right:
                                                 15px;"> Tel: </div>
                                     </td>
@@ -290,7 +306,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="width:140px;">
+                                    <td style="width:80px;">
                                         <div id="envio_cel" style="text-align:right;margin-right:
                                                 15px;"> Cel: </div>
                                     </td>
@@ -299,7 +315,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="width:140px;">
+                                    <td style="width:80px;">
                                         <div id="envio_referencia" style="text-align:right;margin-right:
                                                 15px;"> Referencia: </div>
                                     </td>
@@ -308,7 +324,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="width:140px;">
+                                    <td style="width:80px;">
                                         <div id="envio_municipio" style="text-align:right;margin-right:
                                                 15px;"> Municipio: </div>
                                     </td>
@@ -318,7 +334,7 @@
                                 </tr>
 
                                 <tr>
-                                    <td style="width:140px;">
+                                    <td style="width:80px;">
                                         <div id="envio_estado" style="text-align:right;margin-right:
                                                 15px;"> Estado: </div>
                                     </td>
@@ -327,14 +343,14 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="width:140px;">
+                                    <td style="width:80px;">
                                         <div id="envio_pais" style="text-align:right;margin-right:
                                                 15px;"> Pais: </div>
                                     </td>
                                     <td>
                                         <div> <input type="text" style="width:480px;"> </div>
                                     </td>
-                                </tr>
+                                </tr> 
 
                             </table>
                         </div>
@@ -363,7 +379,8 @@
               PARTE 6 DEL TABULADOR
             -->
                     <div data-spy="scroll" style="height:200px;" class="tab-pane" role="tabpanel" id="step6">
-                        <h4 style="text-align: center;"> Información Requerida para poder hacer el pedido de acuerdo a la compra
+                        <h4 style="text-align: center;"> Información Requerida para poder hacer el pedido de acuerdo a
+                            la compra
                         </h4>
                         <div id="container_sandalias">
                             <table>
@@ -628,8 +645,10 @@
     <script src="vendor/jquery/jquery.js"></script>
     <script src="libs_js/jquery-ui.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css" />
+    <script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css" />
     <script src="js/index.js"></script>
     <script type="text/javascript" src="https://cdn.conekta.io/js/latest/conekta.js"></script>
     <script type="text/javascript" src="js/conekta.js"></script>

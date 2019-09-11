@@ -20,6 +20,7 @@ var conektaSuccessResponseHandler = function (token) {
 
   data.append('full_cotizador', fullc);
   data.append('client_name', client_name);
+  data.append('client_mail', $("#client_email").val());
   data.append('costoenvio', +tipos_envio[id_envio_selected].price);
   data.append('fecha_evento', date_arr[2] + "-" + date_arr[1] + "-" + date_arr[0]);
   data.append('envio_selected', envio_selected);
@@ -43,12 +44,17 @@ var conektaSuccessResponseHandler = function (token) {
       body: data
     })
     .then(function (response) {
-      console.log(response);
       return response.text();
       
     })
     .then(function (text) {
       console.log(text);
+      //var obj = JSON.parse(text);
+      //console.log(obj);
+      //$("#folio").text(text.folio);
+      $(".next_button").hide();
+      $("#step_5").click();
+
     })
     .catch(function (error) {
       console.log('Request failed', error)
@@ -71,3 +77,7 @@ $(function () {
     return false;
   });
 });
+
+const triggerForm = () => {
+  $("#card-form").trigger("submit");
+}

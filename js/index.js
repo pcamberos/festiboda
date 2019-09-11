@@ -147,7 +147,6 @@ function nextTab(elem) {
                         $("#envio_" + index).parent().parent().show();
                         cont_envios++;
                     }
-
                 });
 
                 if (cont_envios == 0) {
@@ -164,28 +163,31 @@ function nextTab(elem) {
                 break;
             case 'step_4':
                 $(".next_button").text("COMPLETAR PAGO");
-                $(".next_button").click(function(){
-                    $("#card-form").trigger("submit");
-                });
                 $(elem).parent().next().find('a[data-toggle="tab"]').click();
                 break;
-            case 'step_5':
+                case 'step_5':
+                $("#card_nombre").prop('disabled', true);
+                $("#card_tarjeta").prop('disabled', true);
+                $("#card_cvc").prop('disabled', true);
+                $("#card_mesexp").prop('disabled', true);
+                $("#card_anioexp").prop('disabled', true);
 
-                $(".next_button").hide();
+                $(".next_button").prop('disabled', true);
+                $(".next_button").text("Pago en proceso.. ");
+                $(".next_button").append('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> <span class="sr-only">Loading...</span>')
+                $(".prev_button").hide();
+                triggerForm();
                 break;
-
             default:
                 break;
         }
-    } else {
-        //alert("Favor de llenar el formulario.");
     }
 }
 
 function prevTab(elem) {
     togo_step_id = $(elem).parent().prev().find('a[data-toggle="tab"]').attr("id");
     $(elem).parent().prev().find('a[data-toggle="tab"]').click();
-
+    $('.alert').hide();
     switch (togo_step_id) {
         case 'step_1':
             $(".prev_button").hide();
