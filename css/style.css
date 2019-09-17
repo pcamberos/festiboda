@@ -30,7 +30,7 @@ input[type=number]::-webkit-outer-spin-button {
     background: #cccccc2e;
 }
 
-#date {
+#event_date {
     max-width: 200px;
     width: 100%;
 }

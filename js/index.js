@@ -121,16 +121,21 @@ $(document).ready(function() {
             );
         });
 
-
-
+        initTesting();
 });
 
 const initTesting = () => {
     setTimeout(() => {
         /* Página 1 */
         $("#client_name").val("Pablo Camberos");
+        $("#event_date").val("31/10/2019");
+        $(".cantidad").val("3");
+        $(".cantidad").trigger("change");
+        $("#envio_0").prop("checked",true);
+        gettipoenvio($("#envio_0"));
+        
 
-    }, 1500);
+    }, 500);
 }
 
 
@@ -144,7 +149,7 @@ function nextTab(elem) {
                 break;
             case 'step_2':
                 $(".prev_button").show();
-                var split_date = ($("#date").val()).split("/");
+                var split_date = ($("#event_date").val()).split("/");
                 const date1 = new Date();
                 const date2 = new Date(split_date['1'] + "/" + split_date['0'] + "/" + split_date['2']);
                 let dif_intime = date2.getTime() - date1.getTime();
@@ -301,9 +306,9 @@ const validate_next = (step) => {
         case 'step_1':
             $('.alert').text("");
             $('#client_name').removeClass('is-invalid');
-            $('#date').removeClass('is-invalid');
+            $('#event_date').removeClass('is-invalid');
 
-            if ($("#client_name").val() != "" && $("#date").val() != "") {
+            if ($("#client_name").val() != "" && $("#event_date").val() != "") {
                 ready_togo = true;
                 $('.alert').hide();
             } else {
@@ -313,8 +318,8 @@ const validate_next = (step) => {
                 if ($("#client_name").val() == "")
                     $('#client_name').addClass('is-invalid');
 
-                if ($("#date").val() == "")
-                    $('#date').addClass('is-invalid');
+                if ($("#event_date").val() == "")
+                    $('#event_date').addClass('is-invalid');
 
                 //<span class="invalid-feedback" role="alert"><strong>mensaje de error</strong></span>
                 //Correo electrónico

@@ -15,7 +15,7 @@ var conektaSuccessResponseHandler = function (token) {
   fullc = fullc + "}";
 
   const client_name = $("#client_name").val();
-  const date = $("#date").val();
+  const date = $("#event_date").val();
   const date_arr = date.split("/");
 
   data.append('full_cotizador', fullc);

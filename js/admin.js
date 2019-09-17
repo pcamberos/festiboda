@@ -56,6 +56,13 @@ $(document).ready(function () {
                     '       <input class="edit_field product_unit_price_edit"  type="text" value="' + item.unit_price + '" />' +
                     '    </div> ' +
                     '    </td> ' +
+ 
+                    '    <td>' +
+                    '    <div> ' +
+                    '       <span  class="data_text product_minimo" > ' + item.minimo + '</span>' +
+                    '       <input class="edit_field product_minimo_edit"  type="text" value="' + item.minimo + '" />' +
+                    '    </div> ' +
+                    '    </td> ' +
 
                     '    <td > ' +
                     '    <div class="edit_div">' +
@@ -331,6 +338,7 @@ const guardarBtn = (input) => {
         console.log("If.. OK product!");
         const data_name = $(item_tr).find(".product_name_edit").val();
         const data_price = $(item_tr).find(".product_unit_price_edit").val();
+        const data_minimo = $(item_tr).find(".product_minimo_edit").val();
 
         let data_new = $(item_tr).attr("class") == 'product_line_new'? true: false;
         console.log("Data: " + data_new);
@@ -339,6 +347,7 @@ const guardarBtn = (input) => {
         product_data.append('data_id', data_id.trim());
         product_data.append('data_name', data_name.trim());
         product_data.append('data_price', data_price.trim());
+        product_data.append('data_minimo', data_minimo.trim());
         product_data.append('data_new', data_new);
 
         fetch('updateProducts.php', {
@@ -356,6 +365,7 @@ const guardarBtn = (input) => {
                     $(item_tr).find(".data_id").text(myJson.newId);    
                 }
                 $(item_tr).find(".product_name").text(data_name.trim());
+                $(item_tr).find(".product_minimo").text(data_minimo.trim());
                 $(item_tr).find(".product_unit_price").text("$"+data_price.trim());
                 cancelarBtn(input);
             }

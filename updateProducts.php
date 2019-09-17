@@ -12,6 +12,7 @@ if (!$conn) {
 $product_id = $_POST['data_id'];
 $product_name = $_POST['data_name'];
 $product_price = $_POST['data_price'];
+$product_minimo= $_POST['data_minimo'];
 $is_new = $_POST['data_new'];
 
 
@@ -19,6 +20,7 @@ if ($is_new == 'false') {
     $sql = " 
         UPDATE products
         SET name = '" . $product_name . "',
+        minimo = '" . $product_minimo . "',
         unit_price = " . $product_price . "
         WHERE id = '" . $product_id . "';
         ";
@@ -38,7 +40,8 @@ if ($is_new == 'false') {
         '" . $product_id . "',
         '" . $product_name . "',
         " . $product_price . ",
-        NOW()
+        NOW(),
+        '" . $product_minimo . "',
         );    
     ";
 }

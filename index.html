@@ -70,11 +70,7 @@
         <div class="container pt-3">
             <div role="form">
                 <div class="tab-content" style="margin-top: 20px;">
-
-                    <div id="errors_alert" class="alert alert-danger" role="alert">
-
-                    </div>
-
+                    <div id="errors_alert" class="alert alert-danger" role="alert"></div>
                     <div class="tab-pane active" role="tabpanel" id="step1">
                         <!--PARTE 1 DEL TABULADOR-->
                         <h4>Hola!! Gracias por tu preferencia.</h4>
@@ -84,14 +80,11 @@
                         </div>
                         <div>
                             <p>¿Para cuando es tu evento? </p>
-                            <input class="form-control" id="date" name="date" placeholder="DD/MM/YYY" type="text"
-                                value="" />
+                            <input class="form-control" id="event_date" name="date" placeholder="DD/MM/YYY" type="text" value="" />
                         </div>
                     </div>
 
-                    <!--
-                                  PARTE 2 DEL TABULADOR
-                                -->
+                    <!--PARTE 2 DEL TABULADOR-->
                     <div class="tab-pane" role="tabpanel" id="step2">
                         <div class="col-md-7">
                             <div class="d-none d-md-block">
@@ -129,9 +122,10 @@
 
                         <div>
                             <select class="browser-default custom-select" style="width: 50%">
-                                <option value="" disabled> Elige tu método de pago </option>
-                                <option value="1" selected> Tarjeta de débito </option>
-                                <option value="2" disabled> Tarjeta de crédito </option>
+                                <option value="" disabled selected> Elige tu método de pago </option>
+                                <option value="pago_debito" > Tarjeta de débito </option>
+                                <option value="pago_credito" > Tarjeta de crédito </option>}
+                                <option value="pago_oxxo" > Depósito vía Oxxo </option>
                             </select>
                         </div>
 
@@ -145,7 +139,7 @@
                         </div>
                         <div class="radio opcion_pago mt-2">
                             <label>
-                                <input id="opcion_pago_3" type="radio" name="opcpagoradio" disabled>
+                                <input id="opcion_pago_3" type="radio" name="opcpagoradio">
                                 3 Pagos de
                                 <span class="monto_pago" id="monto_pago_3">
                                     $0 </span>
@@ -153,7 +147,7 @@
                         </div>
                         <div class="radio opcion_pago mt-2">
                             <label>
-                                <input id="opcion_pago_6" type="radio" name="opcpagoradio" disabled>
+                                <input id="opcion_pago_6" type="radio" name="opcpagoradio">
                                 6 Pagos de
                                 <span class="monto_pago" id="monto_pago_6">
                                     $0 </span>
@@ -161,7 +155,7 @@
                         </div>
                         <div class="radio opcion_pago mt-2">
                             <label>
-                                <input id="opcion_pago_9" type="radio" name="opcpagoradio" disabled>
+                                <input id="opcion_pago_9" type="radio" name="opcpagoradio">
                                 9 Pagos de
                                 <span class="monto_pago" id="monto_pago_9">
                                     $0 </span>
@@ -169,7 +163,7 @@
                         </div>
                         <div class="radio opcion_pago mt-2">
                             <label>
-                                <input id="opcion_pago_12" type="radio" name="opcpagoradio" disabled>
+                                <input id="opcion_pago_12" type="radio" name="opcpagoradio" >
                                 12 Pagos de
                                 <span class="monto_pago" id="monto_pago_12">
                                     $0 </span>
