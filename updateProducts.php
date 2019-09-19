@@ -41,7 +41,7 @@ if ($is_new == 'false') {
         '" . $product_name . "',
         " . $product_price . ",
         NOW(),
-        '" . $product_minimo . "',
+        '" . $product_minimo . "'
         );    
     ";
 }

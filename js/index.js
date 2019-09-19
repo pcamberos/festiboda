@@ -69,8 +69,8 @@ $(document).ready(function() {
                 $("#cotizador p").append('<div class=" product_line row mb-3"> ' +
                     '    <div class="col-3 col-md-2 pl-2 pl-md-0"> ' +
                     '    <input type="number" min="0" value="0" onchange="calcularResultado(this);"  ' + // TESTING "VALOR 0"
-                    '    id="cantidad_' + index + '" class="cantidad" ' +
-                    '       /> ' +
+                    '    id="cantidad_' + index + '" class="cantidad form-control" ' +
+                    '       /> <span class="invalid-feedback" role="alert">* El pedído minimo es de '+ item.minimo + ' piezas </span>' + 
                     '    </div> ' +
                     '    <div class="col-9 col-md-4"> ' +
                     '    <div onclick="myFunction(this,' + index + ')"> ' + item.name + '<i class="fa fa-sort-desc rotate-icon float-right d-block d-md-none"></i> </div> ' +
@@ -85,7 +85,8 @@ $(document).ready(function() {
                 var cotizador_line = {
                     productname: item.name,
                     quantity: 0,
-                    unitprice: +item.unit_price
+                    unitprice: +item.unit_price,
+                    minimo: +item.minimo
                 }
                 full_cotizador.push(cotizador_line);
             });
@@ -129,8 +130,10 @@ const initTesting = () => {
         /* Página 1 */
         $("#client_name").val("Pablo Camberos");
         $("#event_date").val("31/10/2019");
-        $(".cantidad").val("3");
-        $(".cantidad").trigger("change");
+        
+        /* Página 2 */
+        //$(".cantidad").val("3");
+        //$(".cantidad").trigger("change");
         $("#envio_0").prop("checked",true);
         gettipoenvio($("#envio_0"));
         
@@ -393,8 +396,6 @@ const validate_next = (step) => {
                 }
                 $('.alert').fadeIn("slow", function () {});
             }
-
-
             break;
         case 'step_5':
             break;
@@ -404,12 +405,26 @@ const validate_next = (step) => {
 
 const validate_cotizador = () => {
     let ready_togo = false;
-    $("#cotizador p .product_line").each(function() {
+    let someprod_bool = false;
+    let minimo_bool = true;
+    let index = 0;
+    console.log(full_cotizador);
+    $("#cotizador p .product_line").each(function () {
         var tr_line = this;
         if ($(tr_line).find('.cantidad').val() > 0) {
-            ready_togo = true;
+            someprod_bool = true;
+            if ($(tr_line).find('.cantidad').val() >= full_cotizador[index].minimo) {} else {
+                minimo_bool = false;
+                $(tr_line).find('.cantidad').addClass('is-invalid');
+            }
+        } else {
+            $(tr_line).find('.cantidad').removeClass('is-invalid');
         }
+        index++;
     });
+    if (someprod_bool && minimo_bool) {
+        ready_togo = true;
+    }
     return ready_togo;
 }
 

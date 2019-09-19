@@ -440,6 +440,13 @@ const createProduct = () => {
         '    </div> ' +
         '    </td> ' +
 
+        '    <td>' +
+        '    <div> ' +
+        '       <span  class="data_text product_minimo" > </span>' +
+        '       <input class="edit_field product_minimo_edit"  type="text" value="" />' +
+        '    </div> ' +
+        '    </td> ' +
+
         '    <td > ' +
         '    <div class="edit_div">' +
         '    <button type="button" class="btn btn-secondary edit_btn" onclick="editarBtn(this)" > Editar </button> ' +
