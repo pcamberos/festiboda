@@ -21,11 +21,8 @@ var conektaSuccessResponseHandler = function (token) {
   data.append('full_cotizador', fullc);
   data.append('client_name', client_name);
   data.append('client_mail', $("#client_email").val());
-  data.append('costoenvio', +tipos_envio[id_envio_selected].price);
   data.append('fecha_evento', date_arr[2] + "-" + date_arr[1] + "-" + date_arr[0]);
   data.append('envio_selected', envio_selected);
-  data.append('price_envio_selected', tipos_envio[id_envio_selected].price);
-  data.append('total', ($("#total_conenvio").text()).replace("$", ""));
   data.append('num_pagos', opcion_pago_selected);
   data.append('order_status', "Paid");
   data.append('envio_calle', $("#envio_calle").val());
@@ -79,5 +76,7 @@ $(function () {
 });
 
 const triggerForm = () => {
+  console.warn("Full Cotizador");
+  console.log(full_cotizador)
   $("#card-form").trigger("submit");
 }

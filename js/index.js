@@ -83,6 +83,7 @@ $(document).ready(function() {
                     '    </div> ' +
                     '</div>');
                 var cotizador_line = {
+                    id : item.id,
                     productname: item.name,
                     quantity: 0,
                     unitprice: +item.unit_price,
@@ -132,13 +133,27 @@ const initTesting = () => {
         $("#event_date").val("31/10/2019");
         
         /* Página 2 */
-        //$(".cantidad").val("3");
-        //$(".cantidad").trigger("change");
         $("#envio_0").prop("checked",true);
         gettipoenvio($("#envio_0"));
-        
 
-    }, 500);
+        $("#cantidad_4").val("5");
+        $("#cantidad_4").trigger("change");
+        
+        /* Página 3 */
+        $("#forma_pago_select").val("pago_debito"); 
+        $("#forma_pago_select").trigger("change");
+        $("#opcion_pago_1").prop("checked",true);
+        $("#opcion_pago_1").trigger("click");
+
+        /* Pagina 4 */
+        $("#card_nombre").val("Pablo Camberos");
+        $("#client_email").val("juan.camberos@estrasol.com.mx");
+        $("#card_tarjeta").val("4242424242424242");
+        $("#card_cvc").val("789");
+        $("#card_mesexp").val("10");
+        $("#card_anioexp").val("2022");
+
+    }, 800);
 }
 
 
