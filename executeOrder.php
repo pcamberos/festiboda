@@ -51,7 +51,7 @@ if (mysqli_num_rows($result) > 0) {
     }
 }
 
-$total_order = $_POST['price_envio_selected'];
+$total_order = $precio_envio;
 foreach ($myObj as $key => $value) {
     if ($value->quantity > 0) {
         $prod_unitprice = $products[$value->id]['unit_price'];
@@ -127,9 +127,13 @@ if ($sql_arr['success']) {
          * Si el insertado en base de datos es correcto se procede a realizar la venta
          * Desde Conekta
          */
-        require_once("lib/Conekta.php");
-        \Conekta\Conekta::setApiKey("key_Tq9owscXwXiRS1z7xPDPwg");
+        require_once("lib/Conekta.php"); 
+        \Conekta\Conekta::setApiKey("key_Tq9owscXwXiRS1z7xPDPwg");    // Testing Estrasol 
+//        \Conekta\Conekta::setApiKey("key_d6WBcnrimsydrEFSfJLa3Q");    // Testing Festiboda
+//        \Conekta\Conekta::setApiKey("key_cvmf4VJ9hVak3j1wbzy5rQ");    // Producción Festiboda
         \Conekta\Conekta::setApiVersion("2.0.0");
+
+        
 
         try {
             $order = \Conekta\Order::create(
@@ -151,7 +155,7 @@ if ($sql_arr['success']) {
                     "currency" => "MXN",
                     "customer_info" => array(
                         "name" => $client_name,
-                        "email" => "usuario@gmail.com",
+                        "email" => $_POST['client_mail'],
                         "phone" => "5512345678"
                     ), //customer_info
                     "shipping_contact" => array(
@@ -167,12 +171,13 @@ if ($sql_arr['success']) {
                             "payment_method" => array(
                                 //"monthly_installments" => 3,
                                 "type" => "card",
-                                "token_id" => "tok_test_visa_4242"
+                                "token_id" => $_POST['token_venta'],
                             )
                         )
                     )
                 )
             );
+            
             $conn->commit();
             $sql_arr['success'] = "Record updated successfully";
 
@@ -192,20 +197,32 @@ if ($sql_arr['success']) {
                 $mail->Password   = '%.zyzf5jW(X8';                               // SMTP password
                 $mail->SMTPSecure = 'tls';                                  // Enable TLS encryption, `ssl` also accepted
                 $mail->Port       = 587;                                    // TCP port to connect to
-
+                $mail->CharSet = 'UTF-8';
                 //Recipients
                 $mail->setFrom('pruebas@democrm7.estrasol.com.mx', 'FESTIBODA');
                 $mail->addAddress('juan.camberos@estrasol.com.mx',  $_POST['client_name']);     // Add a recipient
                 // Content
                 $mail->isHTML(true);                                  // Set email format to HTML
-                $mail->Subject = 'GRACIAS POR TU COMPRA!';
-                $msg_body = 'Tu pago se ha realizado con éxito! ';
-                $msg_body .= '<br>Con el siguiente folio: <b>V' . $sql_arr['folio'] . "</b>";
-                $msg_body .= "<br><br>Productos en la compra:";
+                $mail->Subject = '!GRACIAS POR TU COMPRA EN FESTIBODA!';
+                $msg_body = 'Tu pago se ha realizado con éxito. ';
+                $msg_body .= '<br>Folio de compra: <b>' . $sql_arr['folio'] . "</b>";
+                $msg_body .= "<br><br>Productos en la compra: <br><br>";
+
+                $msg_body .= '<table>';
                 foreach ($line_items as $item) {
-                    $msg_body .= "<br>" . $item['name'] . " $" . $item['unit_price'];
+                    $msg_body .= "<tr>"; 
+                        $msg_body .= '<td style="border: 1px solid black; width: 250px;">';
+                            $msg_body .= $item['name'];
+                        $msg_body .= '</td>';
+                        $msg_body .= '<td style="border: 1px solid black; width: 80px;">';
+                            $msg_body .= " $" . number_format($item['unit_price'],2,".",",");
+                        $msg_body .= '</td>';
+                    $msg_body .= "</tr>";
                 }
-                $msg_body .= "Por un total de: $" . $_POST['total'];
+                $msg_body .= "</table>";
+
+                $msg_body .= "<br>";
+                $msg_body .= "Precio total de la compra: $" . number_format($total_order,2,".",",");
                 $mail->Body  = $msg_body;
                 $mail->send();
             } catch (Exception $e) {
@@ -213,13 +230,16 @@ if ($sql_arr['success']) {
             }
         } catch (\Conekta\ProcessingError $error) {
             $conn->rollback();
-            echo $error->getMessage();
+            echo json_encode($error->getMessage() . " 1");
+            exit();
         } catch (\Conekta\ParameterValidationError $error) {
             $conn->rollback();
-            echo $error->getMessage();
+            echo json_encode($error->getMessage() . " 2");
+            exit();
         } catch (\Conekta\Handler $error) {
             $conn->rollback();
-            echo $error->getMessage();
+            echo json_encode($error->getMessage()  . " 3");
+            exit();
         }
     }
 } else {

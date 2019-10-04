@@ -1,4 +1,6 @@
-Conekta.setPublicKey('key_Cr9LHy6J8qZrwK8qGfGA63g');
+Conekta.setPublicKey('key_Cr9LHy6J8qZrwK8qGfGA63g');    //Testing Estrasol
+//Conekta.setPublicKey('key_I4YvzH6iyL6mFnwu2a7Uvpw');    //Testing Festiboda
+//Conekta.setPublicKey('key_RArwRgiq2gvYyAJFaxgyAyQ');    // Producción Festiboda
 
 var conektaSuccessResponseHandler = function (token) {
   var $form = $("#card-form");
@@ -35,6 +37,7 @@ var conektaSuccessResponseHandler = function (token) {
   data.append('envio_municipio', $("#envio_municipio").val());
   data.append('envio_estado', $("#envio_estado").val());
   data.append('envio_pais', $("#envio_pais").val());
+  data.append('token_venta',token.id);
 
   fetch('executeOrder.php', {
       method: 'POST',
@@ -45,10 +48,11 @@ var conektaSuccessResponseHandler = function (token) {
       
     })
     .then(function (text) {
-      console.log(text);
-      //var obj = JSON.parse(text);
-      //console.log(obj);
-      //$("#folio").text(text.folio);
+      var return_arr = text.split("{");
+      var json_return = JSON.parse("{" + return_arr['1']);
+      console.warn("Json return:");
+      console.log(json_return);
+      $("#folio").text(+json_return.folio);
       $(".next_button").hide();
       $("#step_5").click();
 
@@ -76,7 +80,5 @@ $(function () {
 });
 
 const triggerForm = () => {
-  console.warn("Full Cotizador");
-  console.log(full_cotizador)
   $("#card-form").trigger("submit");
 }

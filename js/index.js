@@ -52,11 +52,6 @@ $(document).ready(function() {
     };
     date_input.datepicker(options);
 
-    cotizador_totals[0] = 0;
-    cotizador_totals[1] = 0;
-    cotizador_totals[2] = 0;
-    cotizador_totals[3] = 0;
-
     envio_selected = "";
 
     fetch('getProducts.php')
@@ -90,6 +85,7 @@ $(document).ready(function() {
                     minimo: +item.minimo
                 }
                 full_cotizador.push(cotizador_line);
+                cotizador_totals.push(0);
             });
 
             $("#cotizador").append('<div class="subtotal row " > ' +
@@ -205,6 +201,7 @@ function nextTab(elem) {
                 $("#card_cvc").prop('disabled', true);
                 $("#card_mesexp").prop('disabled', true);
                 $("#card_anioexp").prop('disabled', true);
+                $("#client_email").prop('disabled', true);
 
                 $(".next_button").prop('disabled', true);
                 $(".next_button").text("Pago en proceso.. ");
@@ -242,17 +239,17 @@ function prevTab(elem) {
 }
 
 function calcularResultado(input) {
-    var valor = $(input).val();
-    if (valor == "")
+    var cantidad = $(input).val();
+    if (cantidad == "")
         $(input).val("0");
     var clase = $(input).attr("id");
     var clase_arr = clase.split("_");
     var indice = clase_arr[1];
     var precio = products[indice].unit_price;
-    var total_prod = valor * precio;
-    full_cotizador[indice].quantity = +valor;
-    $(input).parent().parent().find(".resultado").text("$" + total_prod);
-    cotizador_totals[indice] = total_prod;
+    var total_linea_prod = cantidad * precio;
+    full_cotizador[indice].quantity = +cantidad;
+    $(input).parent().parent().find(".resultado").text(currencyFormat(total_linea_prod));
+    cotizador_totals[indice] = total_linea_prod;
 
     var subtotal = 0;
     $.each(cotizador_totals, function(index, item) {
@@ -268,6 +265,10 @@ function calcularResultado(input) {
     $("#total_conenvio").text("$" + total)
     generar_opciones_pago(total);
 }
+
+function currencyFormat(num) {
+    return '$' + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+  }
 
 const gettipoenvio = (input_radio) => {
     var id_input = $(input_radio).attr("id");
@@ -325,10 +326,17 @@ const validate_next = (step) => {
             $('.alert').text("");
             $('#client_name').removeClass('is-invalid');
             $('#event_date').removeClass('is-invalid');
+            let fechaev_validado = validate_fechaevento();
 
             if ($("#client_name").val() != "" && $("#event_date").val() != "") {
-                ready_togo = true;
-                $('.alert').hide();
+                if(fechaev_validado){
+                    ready_togo = true;
+                    $('.alert').hide();
+                }else{ 
+                    $('.alert').append('Lo sentimos, NO ES POSIBLE realizar tu pedido en una fecha tan cercana 😞. ');
+                    $('#event_date').addClass('is-invalid');
+                    $('.alert').fadeIn("slow", function () {});
+                }
             } else {
                 $('.alert').append("Favor de llenar los campos correspondientes.")
                 $('.alert').fadeIn("slow", function () {});
@@ -417,13 +425,30 @@ const validate_next = (step) => {
     }
     return ready_togo;
 }
+const validate_fechaevento = () => {
+    let ready_togo = false;
+
+    var split_date = ($("#event_date").val()).split("/");
+    const date1 = new Date();
+    const date2 = new Date(split_date['1'] + "/" + split_date['0'] + "/" + split_date['2']);
+    let dif_intime = date2.getTime() - date1.getTime();
+    let dif_indays = parseInt(dif_intime / (1000 * 3600 * 24));
+
+    var cont_envios = 0;
+    $.each(tipos_envio, function (index, item) {
+        if (dif_indays < item.dias_habiles) {} else {
+            ready_togo = true;
+        }
+    });
+    return ready_togo;
+}
+
 
 const validate_cotizador = () => {
     let ready_togo = false;
     let someprod_bool = false;
     let minimo_bool = true;
     let index = 0;
-    console.log(full_cotizador);
     $("#cotizador p .product_line").each(function () {
         var tr_line = this;
         if ($(tr_line).find('.cantidad').val() > 0) {
