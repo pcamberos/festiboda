@@ -128,14 +128,11 @@ if ($sql_arr['success']) {
          * Desde Conekta
          */
         require_once("lib/Conekta.php"); 
-        \Conekta\Conekta::setApiKey("key_Tq9owscXwXiRS1z7xPDPwg");    // Testing Estrasol 
+//        \Conekta\Conekta::setApiKey("key_Tq9owscXwXiRS1z7xPDPwg");    // Testing Estrasol 
 //        \Conekta\Conekta::setApiKey("key_d6WBcnrimsydrEFSfJLa3Q");    // Testing Festiboda
-//        \Conekta\Conekta::setApiKey("key_cvmf4VJ9hVak3j1wbzy5rQ");    // Producción Festiboda
+        \Conekta\Conekta::setApiKey("key_cvmf4VJ9hVak3j1wbzy5rQ");    // Producción Festiboda
         \Conekta\Conekta::setApiVersion("2.0.0");
-
-        
-
-        try {
+        try { 
             $order = \Conekta\Order::create(
                 array(
                     "line_items" => $line_items,

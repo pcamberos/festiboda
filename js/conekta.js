@@ -1,6 +1,6 @@
-Conekta.setPublicKey('key_Cr9LHy6J8qZrwK8qGfGA63g');    //Testing Estrasol
+//Conekta.setPublicKey('key_Cr9LHy6J8qZrwK8qGfGA63g');    //Testing Estrasol
 //Conekta.setPublicKey('key_I4YvzH6iyL6mFnwu2a7Uvpw');    //Testing Festiboda
-//Conekta.setPublicKey('key_RArwRgiq2gvYyAJFaxgyAyQ');    // Producción Festiboda
+Conekta.setPublicKey('key_RArwRgiq2gvYyAJFaxgyAyQ');    // Producción Festiboda
 
 var conektaSuccessResponseHandler = function (token) {
   var $form = $("#card-form");
@@ -27,16 +27,6 @@ var conektaSuccessResponseHandler = function (token) {
   data.append('envio_selected', envio_selected);
   data.append('num_pagos', opcion_pago_selected);
   data.append('order_status', "Paid");
-  data.append('envio_calle', $("#envio_calle").val());
-  data.append('envio_numext', $("#envio_numext").val());
-  data.append('envio_numint', $("#envio_numint").val());
-  data.append('envio_cp', $("#envio_cp").val());
-  data.append('envio_tel', $("#envio_tel").val());
-  data.append('envio_cel', $("#envio_cel").val());
-  data.append('envio_referencia', $("#envio_referencia").val());
-  data.append('envio_municipio', $("#envio_municipio").val());
-  data.append('envio_estado', $("#envio_estado").val());
-  data.append('envio_pais', $("#envio_pais").val());
   data.append('token_venta',token.id);
 
   fetch('executeOrder.php', {
@@ -45,15 +35,16 @@ var conektaSuccessResponseHandler = function (token) {
     })
     .then(function (response) {
       return response.text();
-      
     })
     .then(function (text) {
       var return_arr = text.split("{");
       var json_return = JSON.parse("{" + return_arr['1']);
-      console.warn("Json return:");
-      console.log(json_return);
-      $("#folio").text(+json_return.folio);
-      $(".next_button").hide();
+      $("#folio").text(json_return.folio);
+      folio_compra = json_return.folio;
+      $(".next_button").prop('disabled', false);
+      $(".next_button").text("Envíar y terminar.");
+      $(".next_button").remove(".spinner-border");
+      $(".next_button").remove(".sr-only");
       $("#step_5").click();
 
     })
@@ -82,3 +73,53 @@ $(function () {
 const triggerForm = () => {
   $("#card-form").trigger("submit");
 }
+
+const procesarDatosEnvio = () => {
+  console.log("Procesar Datos de Envío");
+  const data = new FormData();
+
+  //const client_name = $("#client_name").val();
+  //const date = $("#event_date").val();
+  //const date_arr = date.split("/");
+  //data.append('fecha_evento', date_arr[2] + "-" + date_arr[1] + "-" + date_arr[0]);
+  //data.append('envio_selected', envio_selected);
+  //data.append('num_pagos', opcion_pago_selected);
+  //data.append('order_status', "Paid");
+  const date = $("#event_date").val();
+  const date_arr = date.split("/");
+
+  let json_toOdoo = '{'
+  + '"nombre_cliente":"' + $("#client_name").val() + '",'
+  + '"correo_electronico":"' + $("#client_email").val() + '",'
+  + '"tel":"' + $("#post_telefono").val() + '",'
+  + '"street":"' + $("#post_calle").val() + '",'
+  + '"nombre_contacto":"' + $("#post_nombre").val() + '",'
+  + '"city":"' + $("#post_delegacion").val() + '",'
+  + '"zip":"' + $("#post_cp").val() + '",'
+  + '"state":"' + $("#post_estado").val() + '",'
+  + '"country":"Mexico",'
+  + '"RFC":"XAXX010101000",'
+  + '"tipo_de_pago":"Tarjeta",'
+  + '"no_pagos":"1pago",'
+  + '"envio":"' + envio_selected + '",'
+  + '"folio_web":"' + folio_compra + '",'
+  + '"fecha_evento":"' + date_arr[2] + "-" + date_arr[1] + "-" + date_arr[0] + '",'
+  + '"generado_web":"true",';
+  data.append('folio', folio_compra);  
+  fetch('procesarDatosEnvio.php', {
+    method: 'POST',
+    body: data
+  })
+  .then(function (response) {
+    return response.json();
+  })
+  .then(function (resp) {
+    json_toOdoo += '"lineas_productos":' + resp.line_products + '}';
+
+    console.warn("Json to ODOO:");
+    console.log(json_toOdoo);
+  })
+  .catch(function (error) {
+    console.log('Request failed', error)
+  });
+};

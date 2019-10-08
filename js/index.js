@@ -8,6 +8,7 @@ let togo_step_id = "";
 let envio_selected;
 let id_envio_selected;
 let opcion_pago_selected;
+let folio_compra = "";
 
 $(document).ready(function() {
     subtotal = 0;
@@ -51,7 +52,6 @@ $(document).ready(function() {
         startDate: '-0d'
     };
     date_input.datepicker(options);
-
     envio_selected = "";
 
     fetch('getProducts.php')
@@ -118,8 +118,8 @@ $(document).ready(function() {
                 '</div> '
             );
         });
-
-        initTesting();
+ 
+        //initTesting();
 });
 
 const initTesting = () => {
@@ -149,9 +149,9 @@ const initTesting = () => {
         $("#card_mesexp").val("10");
         $("#card_anioexp").val("2022");
 
+        //$("#step_5").click();
     }, 800);
 }
-
 
 function nextTab(elem) {
     current_step_id = $(elem).attr("id");
@@ -195,7 +195,7 @@ function nextTab(elem) {
                 $(".next_button").text("COMPLETAR PAGO");
                 $(elem).parent().next().find('a[data-toggle="tab"]').click();
                 break;
-                case 'step_5':
+            case 'step_5':
                 $("#card_nombre").prop('disabled', true);
                 $("#card_tarjeta").prop('disabled', true);
                 $("#card_cvc").prop('disabled', true);
@@ -206,8 +206,16 @@ function nextTab(elem) {
                 $(".next_button").prop('disabled', true);
                 $(".next_button").text("Pago en proceso.. ");
                 $(".next_button").append('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> <span class="sr-only">Loading...</span>')
-                $(".prev_button").hide();
+                $(".prev_button").hide(); 
                 triggerForm();
+                break;
+            case 'stepfinal':
+                $(".post").prop('disabled',true);
+                $(".next_button").prop('disabled', true);
+                $(".next_button").text("Procesando información.. ");
+                $(".next_button").append('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> <span class="sr-only">Loading...</span>')
+
+                procesarDatosEnvio();
                 break;
             default:
                 break;
@@ -256,13 +264,14 @@ function calcularResultado(input) {
         subtotal += item;
     });
 
-    $(".total").text("$" + subtotal);
+    $(".total").text(currencyFormat(subtotal));
+
     var total = subtotal
     if (id_envio_selected)
         var total = +total + +tipos_envio[id_envio_selected].price;
 
 
-    $("#total_conenvio").text("$" + total)
+    $("#total_conenvio").text(currencyFormat(total));
     generar_opciones_pago(total);
 }
 
@@ -381,11 +390,23 @@ const validate_next = (step) => {
         case 'step_4':
             // VALIDANDO DATOS DE PAGO
             $('.alert').text("");
-            let valid_nombre = ($("#card_nombre").val() != null && $("#card_nombre").val() != "");
+            let valid_cardnombre = ($("#card_nombre").val() != null && $("#card_nombre").val() != "");
             let valid_tarjeta = ($("#card_tarjeta").val() != null && $("#card_tarjeta").val() != "");
             let valid_CVC = ($("#card_cvc").val() != null && $("#card_cvc").val() != "");
             let valid_mesexp = ($("#card_mesexp").val() != null && $("#card_mesexp").val() != "");
             let valid_anioexp = ($("#card_anioexp").val() != null && $("#card_anioexp").val() != "");
+            let valid_email = ($("#client_email").val() != null && $("#client_email").val() != "");
+
+            let valid_mesexpsize = true;
+            if (valid_mesexp)
+                valid_mesexpsize = $("#card_mesexp").val().length == 2 ? true : false;
+            let valid_anioexpsize = true;
+            if (valid_anioexp)
+                valid_anioexpsize = $("#card_anioexp").val().length == 4 ? true : false;
+
+            let valid_emailformat = true;
+            if (valid_email)
+                valid_emailformat = /\S+@\S+/.test($("#client_email").val()); //validarEmail($("#client_email").val());
 
             $('#card_nombre').removeClass('is-invalid');
             $('#card_tarjeta').removeClass('is-invalid');
@@ -393,14 +414,25 @@ const validate_next = (step) => {
             $('#card_mesexp').removeClass('is-invalid');
             $('#card_anioexp').removeClass('is-invalid');
 
-            if (valid_nombre && valid_tarjeta && valid_CVC && valid_mesexp && valid_anioexp) {
+            if (valid_cardnombre && valid_tarjeta && valid_CVC && valid_mesexp && valid_anioexp && valid_email && valid_emailformat && valid_mesexpsize && valid_anioexpsize) {
                 ready_togo = true;
                 $('.alert').hide();
             } else {
-                if (!valid_nombre) {
+                if (!valid_cardnombre) {
                     $('.alert').append("No se ha especificado el nombre de la tarjeta.</br>")
                     $('#card_nombre').addClass('is-invalid');
                 }
+                
+                if (!valid_email){
+                    $('.alert').append("No se ha especificado correo electrónico.</br>")
+                    $('#client_email').addClass('is-invalid');
+                }
+
+                if(!valid_emailformat){
+                    $('.alert').append("El formato de correo electrónico no es correcto..</br>")
+                    $('#client_email').addClass('is-invalid');
+                }
+
                 if (!valid_tarjeta) {
                     $('.alert').append("No se ha especificado el número de la tarjeta.</br>")
                     $('#card_tarjeta').addClass('is-invalid');
@@ -413,18 +445,134 @@ const validate_next = (step) => {
                     $('.alert').append("No se ha especificado el mes de expiración de la tarjeta.</br>")
                     $('#card_mesexp').addClass('is-invalid');
                 }
+
+                if(!valid_mesexpsize){
+                    $('.alert').append("Formato incorrecto para mes de expiración (MM). </br>")
+                    $('#card_mesexp').addClass('is-invalid');
+                }
+
                 if (!valid_anioexp) {
                     $('.alert').append("No se ha especificado el año de expiración de la tarjeta.</br>")
                     $('#card_anioexp').addClass('is-invalid');
                 }
+
+                if(!valid_anioexpsize){
+                    $('.alert').append("Formato incorrecto para año de expiración (AAAA). </br>")
+                    $('#card_anioexp').addClass('is-invalid');
+                }
+
                 $('.alert').fadeIn("slow", function () {});
             }
             break;
         case 'step_5':
+            $('.alert').text("");
+            let valid_dirnombre = ($("#post_nombre").val() != null && $("#post_nombre").val() != "");
+            let valid_cp = ($("#post_cp").val() != null && $("#post_cp").val() != "");
+            let valid_estado = ($("#post_estado").val() != null && $("#post_estado").val() != "");
+            let valid_delegacion = ($("#post_delegacion").val() != null && $("#post_delegacion").val() != "");
+            let valid_colonia = ($("#post_colonia").val() != null && $("#post_colonia").val() != "");
+            let valid_calle = ($("#post_calle").val() != null && $("#post_calle").val() != "");
+            let valid_exterior = ($("#post_exterior").val() != null && $("#post_exterior").val() != "");
+            let valid_interior = ($("#post_interior").val() != null && $("#post_interior").val() != "");
+            let valid_calle1 = ($("#post_calle1").val() != null && $("#post_calle1").val() != "");
+            let valid_calle2 = ($("#post_calle2").val() != null && $("#post_calle2").val() != "");
+            let valid_referencias = ($("#post_referencias").val() != null && $("#post_referencias").val() != "");
+            let valid_telefono = ($("#post_telefono").val() != null && $("#post_telefono").val() != "");
+
+            let valid_tipodomicilio = ($("#post_tipodomicilio").val() != null && $("#post_exterior").val() != "");
+
+            $('#post_nombre').removeClass('is-invalid');
+            $('#post_cp').removeClass('is-invalid');
+            $('#post_estado').removeClass('is-invalid');
+            $('#post_delegacion').removeClass('is-invalid');
+            $('#post_colonia').removeClass('is-invalid');
+            $('#post_calle').removeClass('is-invalid');
+            $('#post_exterior').removeClass('is-invalid');
+            $('#post_interior').removeClass('is-invalid');
+            $('#post_calle1').removeClass('is-invalid');
+            $('#post_calle2').removeClass('is-invalid');
+            $('#post_referencias').removeClass('is-invalid');
+            $('#post_telefono').removeClass('is-invalid');
+            $('#post_tipodomicilio').removeClass('is-invalid');
+
+            if (valid_dirnombre && valid_cp && valid_estado && valid_delegacion && valid_colonia && valid_calle && valid_exterior && valid_interior && 
+                valid_calle1 && valid_calle2 && valid_referencias && valid_telefono && valid_tipodomicilio ) {
+                console.log("Datos de envío OK");
+                ready_togo = true;
+                $('.alert').hide();
+            } else{
+                console.log("Datos de envío WRONG");
+                ready_togo = false;
+                if (!valid_dirnombre) {
+                    $('.alert').append("No se han especificado Nombre y apellidos.</br>")
+                    $('#post_nombre').addClass('is-invalid');
+                }
+                if (!valid_cp) {
+                    $('.alert').append("No se ha especificado el nombre de la tarjeta.</br>")
+                    $('#post_cp').addClass('is-invalid');
+                }
+                if (!valid_estado) {
+                    $('.alert').append("No se ha especificado el nombre de la tarjeta.</br>")
+                    $('#post_estado').addClass('is-invalid');
+                }
+                if (!valid_delegacion) {
+                    $('.alert').append("No se ha especificado el nombre de la tarjeta.</br>")
+                    $('#post_delegacion').addClass('is-invalid');
+                }
+                if (!valid_colonia) {
+                    $('.alert').append("No se ha especificado el nombre de la tarjeta.</br>")
+                    $('#post_colonia').addClass('is-invalid');
+                }
+                if (!valid_calle) {
+                    $('.alert').append("No se ha especificado el nombre de la tarjeta.</br>")
+                    $('#post_calle').addClass('is-invalid');
+                }
+
+                if (!valid_exterior) {
+                    $('.alert').append("No se ha especificado el nombre de la tarjeta.</br>")
+                    $('#post_exterior').addClass('is-invalid');
+                }
+                if (!valid_interior) {
+                    $('.alert').append("No se ha especificado el nombre de la tarjeta.</br>")
+                    $('#post_interior').addClass('is-invalid');
+                }
+                if (!valid_calle1) {
+                    $('.alert').append("No se ha especificado el nombre de la tarjeta.</br>")
+                    $('#post_calle1').addClass('is-invalid');
+                }
+                if (!valid_calle2) {
+                    $('.alert').append("No se ha especificado el nombre de la tarjeta.</br>")
+                    $('#post_calle2').addClass('is-invalid');
+                }
+                if (!valid_referencias) {
+                    $('.alert').append("No se ha especificado el nombre de la tarjeta.</br>")
+                    $('#post_referencias').addClass('is-invalid');
+                }
+                if (!valid_telefono) {
+                    $('.alert').append("No se ha especificado el nombre de la tarjeta.</br>")
+                    $('#post_telefono').addClass('is-invalid');
+                }
+                if (!valid_tipodomicilio) {
+                    $('.alert').append("No se ha especificado el nombre de la tarjeta.</br>")
+                    $('#post_tipodomicilio').addClass('is-invalid');
+                }
+            }
             break;
     }
     return ready_togo;
 }
+
+function validarEmail(valor) {
+    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3,4})+$/.test(valor)){
+     return true;
+    } else {
+     return false;
+    }
+  }
+
+
+
+
 const validate_fechaevento = () => {
     let ready_togo = false;
 

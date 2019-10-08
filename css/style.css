@@ -19,7 +19,11 @@ input[type=number]::-webkit-outer-spin-button {
     border-color: #58585a
 }
 
-#client_email,
+#client_email {
+    max-width: 600px;
+    width: 100%;
+}
+
 #client_name {
     max-width: 350px;
     width: 100%;
@@ -88,4 +92,8 @@ button.btn-primary:hover {
 
 .token{
     display:none;
+}
+
+.post{
+    margin-bottom: 10px;
 }
