@@ -1,6 +1,6 @@
 //Conekta.setPublicKey('key_Cr9LHy6J8qZrwK8qGfGA63g');    //Testing Estrasol
-//Conekta.setPublicKey('key_I4YvzH6iyL6mFnwu2a7Uvpw');    //Testing Festiboda
-Conekta.setPublicKey('key_RArwRgiq2gvYyAJFaxgyAyQ');    // Producción Festiboda
+Conekta.setPublicKey('key_I4YvzH6iyL6mFnwu2a7Uvpw');    //Testing Festiboda
+//Conekta.setPublicKey('key_RArwRgiq2gvYyAJFaxgyAyQ');    // Producción Festiboda
 
 var conektaSuccessResponseHandler = function (token) {
   var $form = $("#card-form");
