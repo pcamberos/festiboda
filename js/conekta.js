@@ -115,7 +115,7 @@ const procesarDatosEnvio = () => {
   })
   .then(function (resp) {
     json_toOdoo += '"lineas_productos":' + resp.line_products + '}';
-
+    postData(json_toOdoo);
     console.warn("Json to ODOO:");
     console.log(json_toOdoo);
   })
@@ -123,3 +123,16 @@ const procesarDatosEnvio = () => {
     console.log('Request failed', error)
   });
 };
+const postData = (json_data) => {
+  $.ajax({
+      type: "POST",
+      url: "odoo_ws.php",
+      data: { 'data': json_data },
+      success: function(msg) {
+          console.log("record registered:");
+      },
+      error: function(xhr, errmsg, err) {
+        console.warn(xhr.status);
+      }
+  });
+}
