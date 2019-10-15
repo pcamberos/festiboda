@@ -150,8 +150,6 @@ $(document).ready(function() {
         });
     
     if ($("#post_estado").length) {
-        $('#post_estado option').remove();
-        $("#post_estado").append('<option value="" disabled="" selected="selected">País</option>');
         fetch('getPaises.php')
             .then(function(response) {
                 return response.json();
@@ -159,7 +157,10 @@ $(document).ready(function() {
             .then(function(myJson) {
                 $.each(myJson, function(index, item) {
                     $("#post_estado").append('<option value=' + item.id + '>' + item.nombre + '</option>');
+                    console.log("x");
                 });
+                console.log("FINISH");
+                //$('#post_estado option[value=""]');
             });
     }
 
@@ -224,8 +225,8 @@ const initTesting = () => {
         /* Página 5 */
         $("#post_nombre").val("Juan Pérez");
         $("#post_cp").val("52780");
-        $("#post_estado").val("Jalisco");
-        $("#post_delegacion").val("Zapopan");
+        //$("#post_estado").val("Jalisco");
+        //$("#post_delegacion").val("Zapopan");
         $("#post_colonia").val("Barrera");
         $("#post_calle").val("Mexicaltzingo");
         $("#post_exterior").val("1987");
@@ -547,7 +548,7 @@ const validate_next = (step) => {
             let valid_CVC = ($("#card_cvc").val() != null && $("#card_cvc").val() != "");
             let valid_mesexp = ($("#card_mesexp").val() != null && $("#card_mesexp").val() != "");
             let valid_anioexp = ($("#card_anioexp").val() != null && $("#card_anioexp").val() != "");
-            let valid_email = ($("#client_email").val() != null && $("#client_email").val() != "");
+            let valid_email = ($("#card_client_email").val() != null && $("#card_client_email").val() != "");
 
             let valid_mesexpsize = true;
             if (valid_mesexp)
@@ -558,7 +559,7 @@ const validate_next = (step) => {
 
             let valid_emailformat = true;
             if (valid_email)
-                valid_emailformat = /\S+@\S+/.test($("#client_email").val()); //validarEmail($("#client_email").val());
+                valid_emailformat = /\S+@\S+/.test($("#card_client_email").val()); //validarEmail($("#client_email").val());
 
             $('#card_nombre').removeClass('is-invalid');
             $('#card_tarjeta').removeClass('is-invalid');
@@ -577,12 +578,12 @@ const validate_next = (step) => {
 
                 if (!valid_email) {
                     $('.alert').append("No se ha especificado correo electrónico.</br>")
-                    $('#client_email').addClass('is-invalid');
+                    $('#card_client_email').addClass('is-invalid');
                 }
 
                 if (!valid_emailformat) {
                     $('.alert').append("El formato de correo electrónico no es correcto..</br>")
-                    $('#client_email').addClass('is-invalid');
+                    $('#card_client_email').addClass('is-invalid');
                 }
 
                 if (!valid_tarjeta) {
