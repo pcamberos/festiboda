@@ -11,7 +11,10 @@ if (!$conn) {
     die('Could not connect: ');
 }
 
-$sql = "Select * From paises  ";
+$sql = "Select id_externo From paises  where id = '" . $_POST["envio_selected"] . "'";
+$result = mysqli_query($conn, $sql);
+
+$sql = "Select * From estados  where pais_id_externo = '" . $result["id_externo"] . "'";
 $result = mysqli_query($conn, $sql);
 
 $paises = array();
