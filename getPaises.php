@@ -11,7 +11,7 @@ if (!$conn) {
     die('Could not connect: ');
 }
 
-$sql = "Select * From paises  ";
+$sql = "Select * From paises Order by nombre asc  ";
 $result = mysqli_query($conn, $sql);
 
 $paises = array();

@@ -21,7 +21,7 @@ if (mysqli_num_rows($result) > 0) {
     }
  }
 
-$sql = "Select * From estados  where pais_id_externo = '" . $id_externo . "'";
+$sql = "Select * From estados  where pais_id_externo = '" . $id_externo . "' Order by nombre asc ";
 $result = mysqli_query($conn, $sql);
 
 $paises = array();

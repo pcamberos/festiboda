@@ -5,3 +5,10 @@ Stack trace:
 #1 /var/www/html/festiboda/odoo_ws.php(35): ripcord::client('https://festibo...')
 #2 /var/www/html/festiboda/odoo_ws.php(24): insertarRegistro('https://festibo...', 'festiboda-m1-60...', 'eacosta@estraso...', 'estrasol.', Array)
 #3 {main}
+[15-Oct-2019 20:56:22 UTC] Validando si pasan los datos: Pablo Camberos
+[15-Oct-2019 20:56:22 UTC] Error : Ripcord_ConfigurationException: PHP XMLRPC library is not installed in /var/www/html/festiboda/Ripcord/ripcord_client.php:132
+Stack trace:
+#0 /var/www/html/festiboda/Ripcord/ripcord.php(86): Ripcord_Client->__construct('https://festibo...', NULL, Object(Ripcord_Transport_Stream))
+#1 /var/www/html/festiboda/odoo_ws.php(35): ripcord::client('https://festibo...')
+#2 /var/www/html/festiboda/odoo_ws.php(24): insertarRegistro('https://festibo...', 'festiboda-m1-60...', 'eacosta@estraso...', 'estrasol.', Array)
+#3 {main}
