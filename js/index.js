@@ -17,7 +17,7 @@ let channel_id = '';
 
 // http://localhost:8081/festiboda/?client_id=27133523&transport=facebook&channel_id=16615
 
-$(document).ready(function () {
+$(document).ready(function() {
     subtotal = 0;
     client_id = getParameter("client_id");
     transport = getParameter("transport");
@@ -30,37 +30,37 @@ $(document).ready(function () {
 
     //Initialize tooltips
     $('.nav-tabs > li a[title]').tooltip();
-    $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
+    $('a[data-toggle="tab"]').on('show.bs.tab', function(e) {
         var $target = $(e.target);
         if ($target.parent().hasClass('disabled')) {
             return false;
         }
     });
 
-    $(".next-step").click(function (e) {
+    $(".next-step").click(function(e) {
         var $active = $('.nav-tabs li>a.active');
         $active.parent().next().removeClass('disabled');
         nextTab($active);
     });
 
-    $(".prev-step").click(function (e) {
+    $(".prev-step").click(function(e) {
         var $active = $('.nav-tabs li>a.active');
         prevTab($active);
     });
 
-    $(".envio_cot").click(function (e) {
+    $(".envio_cot").click(function(e) {
         generarCotizacion();
     });
 
-    $(".opcion_pago").click(function (e) {
+    $(".opcion_pago").click(function(e) {
         let id_pago = $(this).find(".monto_pago").attr("id");
         num_pagos = id_pago.replace("monto_pago_", "");
 
         opcion_pago_selected = $("#forma_pago_select").val();
-        
+
     });
 
-    $("#forma_pago_select").change(function () {
+    $("#forma_pago_select").change(function() {
         $("#opcion_pago_1").prop('checked', false);
         $("#opcion_pago_3").prop('checked', false);
         $("#opcion_pago_6").prop('checked', false);
@@ -84,12 +84,12 @@ $(document).ready(function () {
     envio_selected = "";
 
     fetch('getProducts.php')
-        .then(function (response) {
+        .then(function(response) {
             return response.json();
         })
-        .then(function (myJson) {
+        .then(function(myJson) {
             products = myJson;
-            $.each(myJson, function (index, item) {
+            $.each(myJson, function(index, item) {
                 $("#cotizador p").append('<div class=" product_line row mb-3"> ' +
                     '    <div class="col-3 col-md-2 pl-2 pl-md-0"> ' +
                     '    <input type="number" min="0" value="0" onchange="calcularResultado(this);"  ' + // TESTING "VALOR 0"
@@ -124,13 +124,13 @@ $(document).ready(function () {
         });
 
     fetch('getTiposEnvio.php')
-        .then(function (response) {
+        .then(function(response) {
             return response.json();
         })
-        .then(function (myJson) {
+        .then(function(myJson) {
             tipos_envio = myJson;
 
-            $.each(tipos_envio, function (index, item) {
+            $.each(tipos_envio, function(index, item) {
                 $("#tipos_envios p").append(
                     '<div class="radio">' +
                     '    <label><input type="radio" onclick="gettipoenvio(this)" id="envio_' + index + '" name="tipoenvradio"> ' + item.name + ' (' + item.dias_habiles + ' DÍAS ' +
@@ -150,6 +150,20 @@ $(document).ready(function () {
 
 
     initTesting();
+
+    if ($("#post_estado").length) {
+        $('select option').remove();
+        $("#post_estado").append('<option value="" disabled="" selected="">País</option>');
+        fetch('getPaises.php')
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(myJson) {
+                $.each(myJson, function(index, item) {
+                    $("#post_estado").append('<option value=' + item.id + '>' + item.name + '</option>');
+                });
+            });
+    }
 });
 
 const initTesting = () => {
@@ -159,7 +173,7 @@ const initTesting = () => {
         $("#event_date").val("31/10/2019");
 
         /* Página 2 */
-        $("#envio_0").prop("checked",true);
+        $("#envio_0").prop("checked", true);
         gettipoenvio($("#envio_0"));
 
         $("#cantidad_4").val("5");
@@ -198,7 +212,7 @@ const initTesting = () => {
         $("#post_referencias").val("Edificio");
         $("#post_telefono").val("3345124578");
         $("#post_tipodomicilio").val("Casa");
-        
+
     }, 500);
 }
 
@@ -214,7 +228,7 @@ const generarCotizacion = () => {
     if (validate_next('step_2')) {
         const data = new FormData();
         let fullc = '{';
-        full_cotizador.map(function (value, index, array) {
+        full_cotizador.map(function(value, index, array) {
             fullc = fullc + '"' + index + '":' + JSON.stringify(value)
             if (index < (full_cotizador.length - 1)) {
                 fullc = fullc + ",";
@@ -234,10 +248,10 @@ const generarCotizacion = () => {
                 method: 'POST',
                 body: data,
             })
-            .then(function (response) {
+            .then(function(response) {
                 return response.text();
             })
-            .then(function (myJson) {
+            .then(function(myJson) {
                 console.log(myJson);
             });
 
@@ -290,7 +304,7 @@ function nextTab(elem) {
                 let dif_indays = parseInt(dif_intime / (1000 * 3600 * 24));
 
                 var cont_envios = 0;
-                $.each(tipos_envio, function (index, item) {
+                $.each(tipos_envio, function(index, item) {
                     if (dif_indays < item.dias_habiles) {
                         $("#envio_" + index).parent().parent().hide();
                     } else {
@@ -389,7 +403,7 @@ function calcularResultado(input) {
     cotizador_totals[indice] = total_linea_prod;
 
     var subtotal = 0;
-    $.each(cotizador_totals, function (index, item) {
+    $.each(cotizador_totals, function(index, item) {
         subtotal += item;
     });
 
@@ -453,11 +467,11 @@ const validate_next = (step) => {
                 } else {
                     $('.alert').append('Lo sentimos, NO ES POSIBLE realizar tu pedido en una fecha tan cercana 😞. ');
                     $('#event_date').addClass('is-invalid');
-                    $('.alert').fadeIn("slow", function () {});
+                    $('.alert').fadeIn("slow", function() {});
                 }
             } else {
                 $('.alert').append("Favor de llenar los campos correspondientes.")
-                $('.alert').fadeIn("slow", function () {});
+                $('.alert').fadeIn("slow", function() {});
 
                 if ($("#client_name").val() == "")
                     $('#client_name').addClass('is-invalid');
@@ -479,7 +493,7 @@ const validate_next = (step) => {
                     $('.alert').append("Es necesario seleccionar por lo menos un producto.</br>")
                 if (!cot_tipoenvio)
                     $('.alert').append("No se ha especificado ningun tipo de envío.</br>")
-                $('.alert').fadeIn("slow", function () {});
+                $('.alert').fadeIn("slow", function() {});
             }
             break;
         case 'step_3':
@@ -491,7 +505,7 @@ const validate_next = (step) => {
                 $('.alert').hide();
             } else {
                 $('.alert').append("No se ha especificado opción de pago.</br>");
-                $('.alert').fadeIn("slow", function () {});
+                $('.alert').fadeIn("slow", function() {});
             }
             break;
         case 'step_4':
@@ -568,7 +582,7 @@ const validate_next = (step) => {
                     $('#card_anioexp').addClass('is-invalid');
                 }
 
-                $('.alert').fadeIn("slow", function () {});
+                $('.alert').fadeIn("slow", function() {});
             }
             break;
         case 'step_5':
@@ -690,7 +704,7 @@ const validate_fechaevento = () => {
     let dif_indays = parseInt(dif_intime / (1000 * 3600 * 24));
 
     var cont_envios = 0;
-    $.each(tipos_envio, function (index, item) {
+    $.each(tipos_envio, function(index, item) {
         if (dif_indays < item.dias_habiles) {} else {
             ready_togo = true;
         }
@@ -704,7 +718,7 @@ const validate_cotizador = () => {
     let someprod_bool = false;
     let minimo_bool = true;
     let index = 0;
-    $("#cotizador p .product_line").each(function () {
+    $("#cotizador p .product_line").each(function() {
         var tr_line = this;
         if ($(tr_line).find('.cantidad').val() > 0) {
             someprod_bool = true;
