@@ -128,6 +128,7 @@ $(document).ready(function() {
             return response.json();
         })
         .then(function(myJson) {
+            //console.log(myJson);
             tipos_envio = myJson;
 
             $.each(tipos_envio, function(index, item) {
@@ -149,7 +150,7 @@ $(document).ready(function() {
         });
 
 
-    initTesting();
+    //initTesting();
 
     if ($("#post_estado").length) {
         $('select option').remove();
@@ -159,8 +160,9 @@ $(document).ready(function() {
                 return response.json();
             })
             .then(function(myJson) {
+                console.log(myJson);
                 $.each(myJson, function(index, item) {
-                    $("#post_estado").append('<option value=' + item.id + '>' + item.name + '</option>');
+                    $("#post_estado").append('<option value=' + item.id + '>' + item.nombre + '</option>');
                 });
             });
     }
