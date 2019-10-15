@@ -8,37 +8,66 @@ let togo_step_id = "";
 let envio_selected;
 let id_envio_selected;
 let opcion_pago_selected;
+let num_pagos;
 let folio_compra = "";
 
-$(document).ready(function() {
+let client_id = '';
+let transport = '';
+let channel_id = '';
+
+// http://localhost:8081/festiboda/?client_id=27133523&transport=facebook&channel_id=16615
+
+$(document).ready(function () {
     subtotal = 0;
+    client_id = getParameter("client_id");
+    transport = getParameter("transport");
+    channel_id = getParameter("channel_id");
+
+    $(".prev_button").hide();
+    $(".envio_cot").hide();
+
+    $(".opcion_pago").hide();
 
     //Initialize tooltips
     $('.nav-tabs > li a[title]').tooltip();
-    //Wizard    
-    $('a[data-toggle="tab"]').on('show.bs.tab', function(e) {
+    $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
         var $target = $(e.target);
         if ($target.parent().hasClass('disabled')) {
             return false;
         }
     });
 
-    $(".next-step").click(function(e) {
+    $(".next-step").click(function (e) {
         var $active = $('.nav-tabs li>a.active');
         $active.parent().next().removeClass('disabled');
         nextTab($active);
     });
 
-    $(".prev-step").click(function(e) {
+    $(".prev-step").click(function (e) {
         var $active = $('.nav-tabs li>a.active');
         prevTab($active);
     });
 
-    $(".prev_button").hide();
+    $(".envio_cot").click(function (e) {
+        generarCotizacion();
+    });
 
-    $(".opcion_pago").click(function(e) {
+    $(".opcion_pago").click(function (e) {
         let id_pago = $(this).find(".monto_pago").attr("id");
-        opcion_pago_selected = id_pago.replace("monto_pago_", "");
+        num_pagos = id_pago.replace("monto_pago_", "");
+
+        opcion_pago_selected = $("#forma_pago_select").val();
+        
+    });
+
+    $("#forma_pago_select").change(function () {
+        $("#opcion_pago_1").prop('checked', false);
+        $("#opcion_pago_3").prop('checked', false);
+        $("#opcion_pago_6").prop('checked', false);
+        $("#opcion_pago_9").prop('checked', false);
+        $("#opcion_pago_12").prop('checked', false);
+        num_pagos = "";
+        mostrarOpcionesPago($(this).val());
     });
 
     var date_input = $('input[name="date"]'); //our date input has the name "date"
@@ -55,17 +84,17 @@ $(document).ready(function() {
     envio_selected = "";
 
     fetch('getProducts.php')
-        .then(function(response) {
+        .then(function (response) {
             return response.json();
         })
-        .then(function(myJson) {
+        .then(function (myJson) {
             products = myJson;
-            $.each(myJson, function(index, item) {
+            $.each(myJson, function (index, item) {
                 $("#cotizador p").append('<div class=" product_line row mb-3"> ' +
                     '    <div class="col-3 col-md-2 pl-2 pl-md-0"> ' +
                     '    <input type="number" min="0" value="0" onchange="calcularResultado(this);"  ' + // TESTING "VALOR 0"
                     '    id="cantidad_' + index + '" class="cantidad form-control" ' +
-                    '       /> <span class="invalid-feedback" role="alert">* El pedído minimo es de '+ item.minimo + ' piezas </span>' + 
+                    '       /> <span class="invalid-feedback" role="alert">* El pedído minimo es de ' + item.minimo + ' piezas </span>' +
                     '    </div> ' +
                     '    <div class="col-9 col-md-4"> ' +
                     '    <div onclick="myFunction(this,' + index + ')"> ' + item.name + '<i class="fa fa-sort-desc rotate-icon float-right d-block d-md-none"></i> </div> ' +
@@ -78,7 +107,7 @@ $(document).ready(function() {
                     '    </div> ' +
                     '</div>');
                 var cotizador_line = {
-                    id : item.id,
+                    id: item.id,
                     productname: item.name,
                     quantity: 0,
                     unitprice: +item.unit_price,
@@ -95,13 +124,13 @@ $(document).ready(function() {
         });
 
     fetch('getTiposEnvio.php')
-        .then(function(response) {
+        .then(function (response) {
             return response.json();
         })
-        .then(function(myJson) {
+        .then(function (myJson) {
             tipos_envio = myJson;
 
-            $.each(tipos_envio, function(index, item) {
+            $.each(tipos_envio, function (index, item) {
                 $("#tipos_envios p").append(
                     '<div class="radio">' +
                     '    <label><input type="radio" onclick="gettipoenvio(this)" id="envio_' + index + '" name="tipoenvradio"> ' + item.name + ' (' + item.dias_habiles + ' DÍAS ' +
@@ -118,8 +147,9 @@ $(document).ready(function() {
                 '</div> '
             );
         });
- 
-        initTesting();
+
+
+    initTesting();
 });
 
 const initTesting = () => {
@@ -127,19 +157,24 @@ const initTesting = () => {
         /* Página 1 */
         $("#client_name").val("Pablo Camberos");
         $("#event_date").val("31/10/2019");
-        
+
         /* Página 2 */
         $("#envio_0").prop("checked",true);
         gettipoenvio($("#envio_0"));
 
         $("#cantidad_4").val("5");
         $("#cantidad_4").trigger("change");
-        
-        /* Página 3 */
+        $("#cantidad_8").val("26");
+        $("#cantidad_8").trigger("change");
+        $("#cantidad_9").val("15");
+        $("#cantidad_9").trigger("change");
+
+        /* Página 3 
         $("#forma_pago_select").val("pago_debito"); 
         $("#forma_pago_select").trigger("change");
         $("#opcion_pago_1").prop("checked",true);
         $("#opcion_pago_1").trigger("click");
+        /*
 
         /* Pagina 4 */
         $("#card_nombre").val("Pablo Camberos");
@@ -149,8 +184,91 @@ const initTesting = () => {
         $("#card_mesexp").val("10");
         $("#card_anioexp").val("2022");
 
-        //$("#step_5").click();
-    }, 800);
+        /* Página 5 */
+        $("#post_nombre").val("Juan Pérez");
+        $("#post_cp").val("52780");
+        $("#post_estado").val("Jalisco");
+        $("#post_delegacion").val("Zapopan");
+        $("#post_colonia").val("Barrera");
+        $("#post_calle").val("Mexicaltzingo");
+        $("#post_exterior").val("1987");
+        $("#post_interior").val("201");
+        $("#post_calle1").val("Chapultepec");
+        $("#post_calle2").val("CalleEj");
+        $("#post_referencias").val("Edificio");
+        $("#post_telefono").val("3345124578");
+        $("#post_tipodomicilio").val("Casa");
+        
+    }, 500);
+}
+
+function getParameter(name) {
+    //var name = 'itemPerPage';
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+const generarCotizacion = () => {
+    /* CHAT2DESK*/
+    if (validate_next('step_2')) {
+        const data = new FormData();
+        let fullc = '{';
+        full_cotizador.map(function (value, index, array) {
+            fullc = fullc + '"' + index + '":' + JSON.stringify(value)
+            if (index < (full_cotizador.length - 1)) {
+                fullc = fullc + ",";
+            }
+        });
+        fullc = fullc + "}";
+
+        data.append('full_cotizador', fullc);
+        data.append('client_id', client_id);
+        data.append('text', 'Mandado mensaje automático');
+        data.append('transport', transport);
+        data.append('channel_id', channel_id);
+        data.append('envio_selected', envio_selected);
+
+
+        fetch('callChat2desk.php', {
+                method: 'POST',
+                body: data,
+            })
+            .then(function (response) {
+                return response.text();
+            })
+            .then(function (myJson) {
+                console.log(myJson);
+            });
+
+        /*fetch('callChat2desk_1.php')
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(myJson) {
+           console.log(myJson);
+        });*/
+    }
+}
+
+const mostrarOpcionesPago = (opcion_pago_fnc) => {
+    switch (opcion_pago_fnc) {
+        case 'pago_debito':
+            $(".opcion_pago").hide();
+            $("#opcion_pago_1").parent().parent().show();
+            $("#opcion_pago_1").prop('checked', true);
+            $("#opcion_pago_1").trigger("click");
+            break;
+        case 'pago_credito':
+            $(".opcion_pago").show();
+            break;
+        case 'pago_oxxo':
+            $(".opcion_pago").hide();
+            $("#opcion_pago_1").parent().parent().show();
+            $("#opcion_pago_1").prop('checked', true);
+            $("#opcion_pago_1").trigger("click");
+            break;
+    }
 }
 
 function nextTab(elem) {
@@ -162,6 +280,8 @@ function nextTab(elem) {
             case 'step_1':
                 break;
             case 'step_2':
+                $(".next_button").text("Proceder a pago");
+                $(".envio_cot").show();
                 $(".prev_button").show();
                 var split_date = ($("#event_date").val()).split("/");
                 const date1 = new Date();
@@ -189,10 +309,12 @@ function nextTab(elem) {
                 $(elem).parent().next().find('a[data-toggle="tab"]').click();
                 break;
             case 'step_3':
+                $(".envio_cot").hide();
+                $(".next_button").text("Continuar");
                 $(elem).parent().next().find('a[data-toggle="tab"]').click();
                 break;
             case 'step_4':
-                $(".next_button").text("COMPLETAR PAGO");
+                $(".next_button").text("Completar Pago");
                 $(elem).parent().next().find('a[data-toggle="tab"]').click();
                 break;
             case 'step_5':
@@ -206,11 +328,11 @@ function nextTab(elem) {
                 $(".next_button").prop('disabled', true);
                 $(".next_button").text("Pago en proceso.. ");
                 $(".next_button").append('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> <span class="sr-only">Loading...</span>')
-                $(".prev_button").hide(); 
+                $(".prev_button").hide();
                 triggerForm();
                 break;
-            case 'stepfinal':
-                $(".post").prop('disabled',true);
+            case 'step_final':
+                $(".post").prop('disabled', true);
                 $(".next_button").prop('disabled', true);
                 $(".next_button").text("Procesando información.. ");
                 $(".next_button").append('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> <span class="sr-only">Loading...</span>')
@@ -260,7 +382,7 @@ function calcularResultado(input) {
     cotizador_totals[indice] = total_linea_prod;
 
     var subtotal = 0;
-    $.each(cotizador_totals, function(index, item) {
+    $.each(cotizador_totals, function (index, item) {
         subtotal += item;
     });
 
@@ -277,7 +399,7 @@ function calcularResultado(input) {
 
 function currencyFormat(num) {
     return '$' + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
-  }
+}
 
 const gettipoenvio = (input_radio) => {
     var id_input = $(input_radio).attr("id");
@@ -291,23 +413,6 @@ const gettipoenvio = (input_radio) => {
     $("#total_conenvio").text("$" + total)
     generar_opciones_pago(total);
 }
-
-/*$('#envio_normal, #envio_express, #envio_internacional').click(function () {
-    var text = $(".total").text();
-    var total = text.replace("$", '');
-    var id = $(this).attr('id');
-    envio_selected = id.split('_')[1];
-    if ($("#envio_normal").is(':checked')) {
-        total = +total + 300;
-    } else if ($("#envio_express").is(':checked')) {
-        total = +total + 1000;
-    } else if ($("#envio_internacional").is(':checked')) {
-        total = +total + 5000;
-    }
-    $("#total_conenvio").text("$" + total)
-    generar_opciones_pago(total);
-});
-*/
 
 function generar_opciones_pago(total) {
     opciones_pagos[0] = (+total);
@@ -335,10 +440,10 @@ const validate_next = (step) => {
             let fechaev_validado = validate_fechaevento();
 
             if ($("#client_name").val() != "" && $("#event_date").val() != "") {
-                if(fechaev_validado){
+                if (fechaev_validado) {
                     ready_togo = true;
                     $('.alert').hide();
-                }else{ 
+                } else {
                     $('.alert').append('Lo sentimos, NO ES POSIBLE realizar tu pedido en una fecha tan cercana 😞. ');
                     $('#event_date').addClass('is-invalid');
                     $('.alert').fadeIn("slow", function () {});
@@ -352,9 +457,6 @@ const validate_next = (step) => {
 
                 if ($("#event_date").val() == "")
                     $('#event_date').addClass('is-invalid');
-
-                //<span class="invalid-feedback" role="alert"><strong>mensaje de error</strong></span>
-                //Correo electrónico
             }
 
             break;
@@ -377,6 +479,7 @@ const validate_next = (step) => {
             $('.alert').text("");
             let opcionpago_validado = (opcion_pago_selected != null && opcion_pago_selected != "");
             if (opcionpago_validado) {
+                console.log("Paso el Validate");
                 ready_togo = true;
                 $('.alert').hide();
             } else {
@@ -419,13 +522,13 @@ const validate_next = (step) => {
                     $('.alert').append("No se ha especificado el nombre de la tarjeta.</br>")
                     $('#card_nombre').addClass('is-invalid');
                 }
-                
-                if (!valid_email){
+
+                if (!valid_email) {
                     $('.alert').append("No se ha especificado correo electrónico.</br>")
                     $('#client_email').addClass('is-invalid');
                 }
 
-                if(!valid_emailformat){
+                if (!valid_emailformat) {
                     $('.alert').append("El formato de correo electrónico no es correcto..</br>")
                     $('#client_email').addClass('is-invalid');
                 }
@@ -443,7 +546,7 @@ const validate_next = (step) => {
                     $('#card_mesexp').addClass('is-invalid');
                 }
 
-                if(!valid_mesexpsize){
+                if (!valid_mesexpsize) {
                     $('.alert').append("Formato incorrecto para mes de expiración (MM). </br>")
                     $('#card_mesexp').addClass('is-invalid');
                 }
@@ -453,7 +556,7 @@ const validate_next = (step) => {
                     $('#card_anioexp').addClass('is-invalid');
                 }
 
-                if(!valid_anioexpsize){
+                if (!valid_anioexpsize) {
                     $('.alert').append("Formato incorrecto para año de expiración (AAAA). </br>")
                     $('#card_anioexp').addClass('is-invalid');
                 }
@@ -492,12 +595,12 @@ const validate_next = (step) => {
             $('#post_telefono').removeClass('is-invalid');
             $('#post_tipodomicilio').removeClass('is-invalid');
 
-            if (valid_dirnombre && valid_cp && valid_estado && valid_delegacion && valid_colonia && valid_calle && valid_exterior && valid_interior && 
-                valid_calle1 && valid_calle2 && valid_referencias && valid_telefono && valid_tipodomicilio ) {
+            if (valid_dirnombre && valid_cp && valid_estado && valid_delegacion && valid_colonia && valid_calle && valid_exterior && valid_interior &&
+                valid_calle1 && valid_calle2 && valid_referencias && valid_telefono && valid_tipodomicilio) {
                 console.log("Datos de envío OK");
                 ready_togo = true;
                 $('.alert').hide();
-            } else{
+            } else {
                 console.log("Datos de envío WRONG");
                 ready_togo = false;
                 if (!valid_dirnombre) {
@@ -560,12 +663,12 @@ const validate_next = (step) => {
 }
 
 function validarEmail(valor) {
-    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3,4})+$/.test(valor)){
-     return true;
+    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3,4})+$/.test(valor)) {
+        return true;
     } else {
-     return false;
+        return false;
     }
-  }
+}
 
 
 
@@ -598,7 +701,9 @@ const validate_cotizador = () => {
         var tr_line = this;
         if ($(tr_line).find('.cantidad').val() > 0) {
             someprod_bool = true;
-            if ($(tr_line).find('.cantidad').val() >= full_cotizador[index].minimo) {} else {
+            if ($(tr_line).find('.cantidad').val() >= full_cotizador[index].minimo) {
+                $(tr_line).find('.cantidad').removeClass('is-invalid');
+            } else {
                 minimo_bool = false;
                 $(tr_line).find('.cantidad').addClass('is-invalid');
             }

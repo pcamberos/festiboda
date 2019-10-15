@@ -6,7 +6,7 @@ var conektaSuccessResponseHandler = function (token) {
   var $form = $("#card-form");
   $form.append($('<input type="hidden" name="conektaTokenId" id="conektaTokenId">').val(token.id));
 
-  const data = new FormData();
+  const data = new FormData(); 
   let fullc = '{';
   full_cotizador.map(function (value, index, array) {
     fullc = fullc + '"' + index + '":' + JSON.stringify(value)
@@ -25,7 +25,8 @@ var conektaSuccessResponseHandler = function (token) {
   data.append('client_mail', $("#client_email").val());
   data.append('fecha_evento', date_arr[2] + "-" + date_arr[1] + "-" + date_arr[0]);
   data.append('envio_selected', envio_selected);
-  data.append('num_pagos', opcion_pago_selected);
+  data.append('opcion_pago', opcion_pago_selected);
+  data.append('num_pagos', num_pagos);
   data.append('order_status', "Paid");
   data.append('token_venta',token.id);
 
@@ -38,9 +39,11 @@ var conektaSuccessResponseHandler = function (token) {
     })
     .then(function (text) {
       var return_arr = text.split("{");
-      var json_return = JSON.parse("{" + return_arr['1']);
-      $("#folio").text(json_return.folio);
-      folio_compra = json_return.folio;
+      console.log(return_arr['1']);
+      //var json_return = JSON.parse("{" + return_arr['1']);
+      //$("#folio").text(json_return.folio);
+      //folio_compra = json_return.folio;
+
       $(".next_button").prop('disabled', false);
       $(".next_button").text("Envíar y terminar.");
       $(".next_button").remove(".spinner-border");
@@ -118,6 +121,8 @@ const procesarDatosEnvio = () => {
     postData(json_toOdoo);
     console.warn("Json to ODOO:");
     console.log(json_toOdoo);
+    $("#step_final").trigger("click");
+    $(".next-step").hide();
   })
   .catch(function (error) {
     console.log('Request failed', error)

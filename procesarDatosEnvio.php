@@ -50,5 +50,12 @@ if (mysqli_num_rows($result) > 0) {
 $line_products .= '}';
 $conn->close();
 
+/**
+ * CHAT2DESK
+ */
+
+
+
+
 $return_array['line_products'] = $line_products;
 echo json_encode($return_array);

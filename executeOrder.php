@@ -24,6 +24,7 @@ $client_name = $_POST["client_name"];
 $myObj = json_decode($_POST["full_cotizador"]);
 $sql_arr = array(
     "SQL" => "",
+    "type" => $_POST['opcion_pago'],
     "success" => "",
     "folio" => "",
     "error" => ""
@@ -32,8 +33,8 @@ $sql_arr = array(
 /**
  * Obteniendo Precio de tipo de envio
  */
-$precio_envio=0;
-$result_envio = $conn->query("Select price from tipos_envio where keyword = '".$_POST["envio_selected"]."';");
+$precio_envio = 0;
+$result_envio = $conn->query("Select price from tipos_envio where keyword = '" . $_POST["envio_selected"] . "';");
 while ($row_envio = mysqli_fetch_assoc($result_envio)) {
     $precio_envio  = $row_envio['price'];
 }
@@ -127,22 +128,32 @@ if ($sql_arr['success']) {
          * Si el insertado en base de datos es correcto se procede a realizar la venta
          * Desde Conekta
          */
-        require_once("lib/Conekta.php"); 
-//        \Conekta\Conekta::setApiKey("key_Tq9owscXwXiRS1z7xPDPwg");    // Testing Estrasol 
+
+        require_once("lib/Conekta.php");
+        //        \Conekta\Conekta::setApiKey("key_Tq9owscXwXiRS1z7xPDPwg");    // Testing Estrasol 
         \Conekta\Conekta::setApiKey("key_d6WBcnrimsydrEFSfJLa3Q");    // Testing Festiboda
-//        \Conekta\Conekta::setApiKey("key_cvmf4VJ9hVak3j1wbzy5rQ");    // Producción Festiboda
+        //        \Conekta\Conekta::setApiKey("key_cvmf4VJ9hVak3j1wbzy5rQ");    // Producción Festiboda
         \Conekta\Conekta::setApiVersion("2.0.0");
-        try { 
+
+        /* PAYMENT METHOD.. */
+        if ($_POST['opcion_pago'] == 'pago_debito' ||  $_POST['opcion_pago'] == 'pago_credito') {
+            $paymenth_method = array(
+                "type" => "card",
+                "token_id" => $_POST['token_venta']
+            );
+            if ($_POST['num_pagos'] != 1) {
+                $paymenth_method['monthly_installments'] = $_POST['num_pagos'];
+            }
+        } else if ($_POST['opcion_pago'] == 'pago_oxxo') {
+            $paymenth_method = array(
+                "type" => "oxxo_cash"
+            );
+        }
+
+        try {
             $order = \Conekta\Order::create(
                 array(
                     "line_items" => $line_items,
-                    /* array(
-                        array(
-                            "name" => "Tacos",
-                            "unit_price" => 1000,
-                            "quantity" => 120
-                        )
-                ), */
                     "shipping_lines" => array(
                         array(
                             "amount" => ($precio_envio * 100),
@@ -153,7 +164,7 @@ if ($sql_arr['success']) {
                     "customer_info" => array(
                         "name" => $client_name,
                         "email" => $_POST['client_mail'],
-                        "phone" => "5512345678"
+                        "phone" => "6441468339"
                     ), //customer_info
                     "shipping_contact" => array(
                         "address" => array(
@@ -162,19 +173,17 @@ if ($sql_arr['success']) {
                             "country" => "MX"
                         )
                     ),
-                    "metadata" => array("reference" => "12987324097", "more_info" => "lalalalala"),
+                    //"metadata" => array("reference" => "12987324097", "more_info" => "Compra en Festiboda"),
                     "charges" => array(
                         array(
-                            "payment_method" => array(
-                                //"monthly_installments" => 3,
-                                "type" => "card",
-                                "token_id" => $_POST['token_venta'],
-                            )
+                            "payment_method" => $paymenth_method
                         )
                     )
                 )
             );
             
+            
+            $sql_arr['reference'] = $order->charges[0]->payment_method->reference;
             $conn->commit();
             $sql_arr['success'] = "Record updated successfully";
 
@@ -207,19 +216,19 @@ if ($sql_arr['success']) {
 
                 $msg_body .= '<table>';
                 foreach ($line_items as $item) {
-                    $msg_body .= "<tr>"; 
-                        $msg_body .= '<td style="border: 1px solid black; width: 250px;">';
-                            $msg_body .= $item['name'];
-                        $msg_body .= '</td>';
-                        $msg_body .= '<td style="border: 1px solid black; width: 80px;">';
-                            $msg_body .= " $" . number_format($item['unit_price'],2,".",",");
-                        $msg_body .= '</td>';
+                    $msg_body .= "<tr>";
+                    $msg_body .= '<td style="border: 1px solid black; width: 250px;">';
+                    $msg_body .= $item['name'];
+                    $msg_body .= '</td>';
+                    $msg_body .= '<td style="border: 1px solid black; width: 80px;">';
+                    $msg_body .= " $" . number_format($item['unit_price'], 2, ".", ",");
+                    $msg_body .= '</td>';
                     $msg_body .= "</tr>";
                 }
                 $msg_body .= "</table>";
 
                 $msg_body .= "<br>";
-                $msg_body .= "Precio total de la compra: $" . number_format($total_order,2,".",",");
+                $msg_body .= "Precio total de la compra: $" . number_format($total_order, 2, ".", ",");
                 $mail->Body  = $msg_body;
                 $mail->send();
             } catch (Exception $e) {
