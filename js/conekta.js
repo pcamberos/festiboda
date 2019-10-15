@@ -19,15 +19,22 @@ var conektaSuccessResponseHandler = function (token) {
   const client_name = $("#client_name").val();
   const date = $("#event_date").val();
   const date_arr = date.split("/");
+  
+  let email_address = "";
+  if(opcion_pago_selected == 'pago_credito' || opcion_pago_selected == 'pago_debito'){
+    email_address = $("#card_client_email").val();
+  }else{
+    email_address = $("#oxxo_client_email").val();
+  }
 
   data.append('full_cotizador', fullc);
   data.append('client_name', client_name);
-  data.append('client_mail', $("#card_client_email").val());
+  data.append('client_mail', email_address);
   data.append('fecha_evento', date_arr[2] + "-" + date_arr[1] + "-" + date_arr[0]);
   data.append('envio_selected', envio_selected);
   data.append('opcion_pago', opcion_pago_selected);
   data.append('num_pagos', num_pagos);
-  data.append('order_status', "Paid");
+  data.append('order_status', "Pagado");
   data.append('token_venta',token.id);
 
   fetch('executeOrder.php', {
@@ -88,9 +95,16 @@ const procesarDatosEnvio = () => {
   const date = $("#event_date").val();
   const date_arr = date.split("/");
 
+  let email_address = "";
+  if(opcion_pago_selected == 'pago_credito' || opcion_pago_selected == 'pago_debito'){
+    email_address = $("#card_client_email").val();
+  }else{
+    email_address = $("#oxxo_client_email").val();
+  }
+
   let json_toOdoo = '{'
   + '"nombre_cliente":"' + $("#client_name").val() + '",'
-  + '"correo_electronico":"' + $("#card_client_email").val() + '",'
+  + '"correo_electronico":"' + email_address + '",'
   + '"tel":"' + $("#post_telefono").val() + '",'
   + '"street":"' + $("#post_calle").val() + '",'
   + '"nombre_contacto":"' + $("#post_nombre").val() + '",'

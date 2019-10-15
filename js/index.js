@@ -149,27 +149,27 @@ $(document).ready(function() {
             );
         });
     
-    if ($("#post_estado").length) {
+    if ($("#post_pais").length) {
         fetch('getPaises.php')
             .then(function(response) {
                 return response.json();
             })
             .then(function(myJson) {
                 $.each(myJson, function(index, item) {
-                    $("#post_estado").append('<option value=' + item.id + '>' + item.nombre + '</option>');
+                    $("#post_pais").append('<option value=' + item.id + '>' + item.nombre + '</option>');
                     console.log("x");
                 });
                 console.log("FINISH");
-                //$('#post_estado option[value=""]');
+                //$('#post_pais option[value=""]');
             });
     }
 
     initTesting();
 });
 
-$(document).on('change', '#post_estado', function(event) {
+$(document).on('change', '#post_pais', function(event) {
     
-    var id = $("#post_estado option:selected").val();
+    var id = $("#post_pais option:selected").val();
     console.warn(id);
     const data = new FormData();
     data.append('id', id);
@@ -182,10 +182,10 @@ $(document).on('change', '#post_estado', function(event) {
         })
         .then(function(myJson) {
             console.log(myJson);
-            $('#post_delegacion option').remove();
-            $("#post_delegacion").append('<option value="" disabled="" selected="">Delegación / Municipio</option>');
+            $('#post_estado option').remove();
+            $("#post_estado").append('<option value="" disabled="" selected=""> Estado </option>');
             $.each(myJson, function(index, item) {
-                $("#post_delegacion").append('<option value=' + item.id + '>' + item.nombre + '</option>');
+                $("#post_estado").append('<option value=' + item.id + '>' + item.nombre + '</option>');
             });
         });
 });
@@ -225,8 +225,8 @@ const initTesting = () => {
         /* Página 5 */
         $("#post_nombre").val("Juan Pérez");
         $("#post_cp").val("52780");
-        //$("#post_estado").val("Jalisco");
-        //$("#post_delegacion").val("Zapopan");
+        //$("#post_pais").val("Jalisco");
+        //$("#post_estado").val("Zapopan");
         $("#post_colonia").val("Barrera");
         $("#post_calle").val("Mexicaltzingo");
         $("#post_exterior").val("1987");
@@ -621,8 +621,8 @@ const validate_next = (step) => {
             $('.alert').text("");
             let valid_dirnombre = ($("#post_nombre").val() != null && $("#post_nombre").val() != "");
             let valid_cp = ($("#post_cp").val() != null && $("#post_cp").val() != "");
-            let valid_estado = ($("#post_estado").val() != null && $("#post_estado").val() != "");
-            let valid_delegacion = ($("#post_delegacion").val() != null && $("#post_delegacion").val() != "");
+            let valid_estado = ($("#post_pais").val() != null && $("#post_pais").val() != "");
+            let valid_delegacion = ($("#post_estado").val() != null && $("#post_estado").val() != "");
             let valid_colonia = ($("#post_colonia").val() != null && $("#post_colonia").val() != "");
             let valid_calle = ($("#post_calle").val() != null && $("#post_calle").val() != "");
             let valid_exterior = ($("#post_exterior").val() != null && $("#post_exterior").val() != "");
@@ -636,8 +636,8 @@ const validate_next = (step) => {
 
             $('#post_nombre').removeClass('is-invalid');
             $('#post_cp').removeClass('is-invalid');
+            $('#post_pais').removeClass('is-invalid');
             $('#post_estado').removeClass('is-invalid');
-            $('#post_delegacion').removeClass('is-invalid');
             $('#post_colonia').removeClass('is-invalid');
             $('#post_calle').removeClass('is-invalid');
             $('#post_exterior').removeClass('is-invalid');
@@ -666,11 +666,11 @@ const validate_next = (step) => {
                 }
                 if (!valid_estado) {
                     $('.alert').append("No se ha especificado el nombre de la tarjeta.</br>")
-                    $('#post_estado').addClass('is-invalid');
+                    $('#post_pais').addClass('is-invalid');
                 }
                 if (!valid_delegacion) {
                     $('.alert').append("No se ha especificado el nombre de la tarjeta.</br>")
-                    $('#post_delegacion').addClass('is-invalid');
+                    $('#post_estado').addClass('is-invalid');
                 }
                 if (!valid_colonia) {
                     $('.alert').append("No se ha especificado el nombre de la tarjeta.</br>")
