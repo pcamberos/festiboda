@@ -45,14 +45,21 @@ var conektaSuccessResponseHandler = function (token) {
       return response.text();
     })
     .then(function (text) {
+      console.log(text);
       var return_arr = text.split("{");
       var json_return = JSON.parse("{" + return_arr['1']);
       console.log(json_return);
+      folio_compra = json_return.folio;
       if(json_return.type == 'pago_credito' || json_return.type == 'pago_debito' ){
+        $(".mu_gracias").show();
+        $(".tu_pago").show();
+        $(".folio_lbl").text("FOLIO:")
         $("#folio").text(json_return.folio);
-        folio_compra = json_return.folio;
       }else{
-
+        $(".mu_gracias").hide();
+        $(".tu_pago").hide();
+        $(".folio_lbl").text("Número de referencia oxxo: ")
+        $("#folio").text(json_return.reference);
       }
       
 

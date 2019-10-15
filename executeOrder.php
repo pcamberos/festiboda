@@ -81,7 +81,8 @@ $sql_arr['SQL'] = " CALL create_order (
     " . $precio_envio . ",
     " . $total_order . ",
     " . $_POST['num_pagos'] . ",
-    '" . $_POST['order_status'] . "');
+    '" . $_POST['order_status'] . "',
+    '".$_POST['opcion_pago']."');
 ";
 $result = $conn->query($sql_arr['SQL']);
 $sql_arr['success'] = $result;
@@ -144,7 +145,7 @@ if ($sql_arr['success']) {
             if ($_POST['num_pagos'] != 1) {
                 $paymenth_method['monthly_installments'] = $_POST['num_pagos'];
             }
-        } else if ($_POST['opcion_pago'] == 'pago_oxxo') {
+        } else{
             $paymenth_method = array(
                 "type" => "oxxo_cash"
             );

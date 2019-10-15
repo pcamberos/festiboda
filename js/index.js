@@ -621,8 +621,9 @@ const validate_next = (step) => {
             $('.alert').text("");
             let valid_dirnombre = ($("#post_nombre").val() != null && $("#post_nombre").val() != "");
             let valid_cp = ($("#post_cp").val() != null && $("#post_cp").val() != "");
-            let valid_estado = ($("#post_pais").val() != null && $("#post_pais").val() != "");
-            let valid_delegacion = ($("#post_estado").val() != null && $("#post_estado").val() != "");
+            let valid_pais = ($("#post_pais").val() != null && $("#post_pais").val() != "");
+            let valid_estado = ($("#post_estado").val() != null && $("#post_estado").val() != "");
+            let valid_delegacion = ($("#post_delegacion").val() != null && $("#post_delegacion").val() != "");
             let valid_colonia = ($("#post_colonia").val() != null && $("#post_colonia").val() != "");
             let valid_calle = ($("#post_calle").val() != null && $("#post_calle").val() != "");
             let valid_exterior = ($("#post_exterior").val() != null && $("#post_exterior").val() != "");
@@ -632,7 +633,7 @@ const validate_next = (step) => {
             let valid_referencias = ($("#post_referencias").val() != null && $("#post_referencias").val() != "");
             let valid_telefono = ($("#post_telefono").val() != null && $("#post_telefono").val() != "");
 
-            let valid_tipodomicilio = ($("#post_tipodomicilio").val() != null && $("#post_exterior").val() != "");
+            /*let valid_tipodomicilio = ($("#post_tipodomicilio").val() != null && $("#post_exterior").val() != "");*/
 
             $('#post_nombre').removeClass('is-invalid');
             $('#post_cp').removeClass('is-invalid');
@@ -646,10 +647,10 @@ const validate_next = (step) => {
             $('#post_calle2').removeClass('is-invalid');
             $('#post_referencias').removeClass('is-invalid');
             $('#post_telefono').removeClass('is-invalid');
-            $('#post_tipodomicilio').removeClass('is-invalid');
+            /*$('#post_tipodomicilio').removeClass('is-invalid');*/
 
             if (valid_dirnombre && valid_cp && valid_estado && valid_delegacion && valid_colonia && valid_calle && valid_exterior && valid_interior &&
-                valid_calle1 && valid_calle2 && valid_referencias && valid_telefono && valid_tipodomicilio) {
+                valid_calle1 && valid_calle2 && valid_referencias && valid_telefono && valid_pais) {
                 console.log("Datos de envío OK");
                 ready_togo = true;
                 $('.alert').hide();
@@ -661,54 +662,60 @@ const validate_next = (step) => {
                     $('#post_nombre').addClass('is-invalid');
                 }
                 if (!valid_cp) {
-                    $('.alert').append("No se ha especificado el nombre de la tarjeta.</br>")
+                    $('.alert').append("No se ha especificado código postal.</br>")
                     $('#post_cp').addClass('is-invalid');
                 }
+
+                if(!valid_pais){
+                    $('.alert').append("No se ha especificado el país.</br>")
+                    $('#post_pais').addClass('is-invalid');
+                }
+
                 if (!valid_estado) {
-                    $('.alert').append("No se ha especificado el nombre de la tarjeta.</br>")
+                    $('.alert').append("No se ha especificado el estado.</br>")
                     $('#post_pais').addClass('is-invalid');
                 }
                 if (!valid_delegacion) {
-                    $('.alert').append("No se ha especificado el nombre de la tarjeta.</br>")
+                    $('.alert').append("No se ha especificado la delegación.</br>")
                     $('#post_estado').addClass('is-invalid');
                 }
                 if (!valid_colonia) {
-                    $('.alert').append("No se ha especificado el nombre de la tarjeta.</br>")
+                    $('.alert').append("No se ha especificado la colonia.</br>")
                     $('#post_colonia').addClass('is-invalid');
                 }
                 if (!valid_calle) {
-                    $('.alert').append("No se ha especificado el nombre de la tarjeta.</br>")
+                    $('.alert').append("No se ha especificado la calle.</br>")
                     $('#post_calle').addClass('is-invalid');
                 }
 
                 if (!valid_exterior) {
-                    $('.alert').append("No se ha especificado el nombre de la tarjeta.</br>")
+                    $('.alert').append("No se ha especificado el número exterior.</br>")
                     $('#post_exterior').addClass('is-invalid');
                 }
                 if (!valid_interior) {
-                    $('.alert').append("No se ha especificado el nombre de la tarjeta.</br>")
+                    $('.alert').append("No se ha especificado el número interior.</br>")
                     $('#post_interior').addClass('is-invalid');
                 }
                 if (!valid_calle1) {
-                    $('.alert').append("No se ha especificado el nombre de la tarjeta.</br>")
+                    $('.alert').append("No se ha especificado la calle 1.</br>")
                     $('#post_calle1').addClass('is-invalid');
                 }
                 if (!valid_calle2) {
-                    $('.alert').append("No se ha especificado el nombre de la tarjeta.</br>")
+                    $('.alert').append("No se ha especificado  la calle 2.</br>")
                     $('#post_calle2').addClass('is-invalid');
                 }
                 if (!valid_referencias) {
-                    $('.alert').append("No se ha especificado el nombre de la tarjeta.</br>")
+                    $('.alert').append("No se han especificado referencias.</br>")
                     $('#post_referencias').addClass('is-invalid');
                 }
                 if (!valid_telefono) {
-                    $('.alert').append("No se ha especificado el nombre de la tarjeta.</br>")
+                    $('.alert').append("No se ha especificado teléfono.</br>")
                     $('#post_telefono').addClass('is-invalid');
                 }
-                if (!valid_tipodomicilio) {
+               /*if (!valid_tipodomicilio) {
                     $('.alert').append("No se ha especificado el nombre de la tarjeta.</br>")
                     $('#post_tipodomicilio').addClass('is-invalid');
-                }
+                }*/
             }
             break;
     }
