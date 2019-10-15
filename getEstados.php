@@ -11,10 +11,17 @@ if (!$conn) {
     die('Could not connect: ');
 }
 
-$sql = "Select id_externo From paises  where id = '" . $_POST["envio_selected"] . "'";
+$sql = "Select id_externo From paises  where id = '" . $_POST["id"] . "'";
 $result = mysqli_query($conn, $sql);
 
-$sql = "Select * From estados  where pais_id_externo = '" . $result["id_externo"] . "'";
+$id_externo = "";
+if (mysqli_num_rows($result) > 0) {
+    while($row = mysqli_fetch_assoc($result)) {
+        $id_externo = $row['id_externo'];
+    }
+ }
+
+$sql = "Select * From estados  where pais_id_externo = '" . $id_externo . "'";
 $result = mysqli_query($conn, $sql);
 
 $paises = array();
@@ -23,8 +30,6 @@ if (mysqli_num_rows($result) > 0) {
        $paises[] = $row;
     }
  }
-
-
 
 
 $conn->close();
