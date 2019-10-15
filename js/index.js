@@ -314,6 +314,13 @@ function nextTab(elem) {
                 $(elem).parent().next().find('a[data-toggle="tab"]').click();
                 break;
             case 'step_4':
+                if (opcion_pago_selected == 'pago_debito' || opcion_pago_selected == 'pago_credito') {
+                    $(".panel_tarjeta").show();
+                    $(".panel_oxxopay").hide();
+                } else if (opcion_pago_selected == 'pago_oxxo') {
+                    $(".panel_tarjeta").hide();
+                    $(".panel_oxxopay").show();
+                }
                 $(".next_button").text("Completar Pago");
                 $(elem).parent().next().find('a[data-toggle="tab"]').click();
                 break;
