@@ -148,24 +148,22 @@ $(document).ready(function() {
                 '</div> '
             );
         });
-
-
-    //initTesting();
-
+    
     if ($("#post_estado").length) {
-        $('select option').remove();
+        $('#post_estado option').remove();
         $("#post_estado").append('<option value="" disabled="" selected="">País</option>');
         fetch('getPaises.php')
             .then(function(response) {
                 return response.json();
             })
             .then(function(myJson) {
-                console.log(myJson);
                 $.each(myJson, function(index, item) {
                     $("#post_estado").append('<option value=' + item.id + '>' + item.nombre + '</option>');
                 });
             });
     }
+
+    initTesting();
 });
 
 const initTesting = () => {
@@ -194,7 +192,8 @@ const initTesting = () => {
 
         /* Pagina 4 */
         $("#card_nombre").val("Pablo Camberos");
-        $("#client_email").val("juan.camberos@estrasol.com.mx");
+        $("#card_client_email").val("juan.camberos@estrasol.com.mx");
+        $("#oxxo_client_email").val("juan.camberos@estrasol.com.mx");
         $("#card_tarjeta").val("4242424242424242");
         $("#card_cvc").val("789");
         $("#card_mesexp").val("10");
@@ -341,15 +340,23 @@ function nextTab(elem) {
                 $(elem).parent().next().find('a[data-toggle="tab"]').click();
                 break;
             case 'step_5':
+                // Campos de tarjeta
                 $("#card_nombre").prop('disabled', true);
                 $("#card_tarjeta").prop('disabled', true);
                 $("#card_cvc").prop('disabled', true);
                 $("#card_mesexp").prop('disabled', true);
                 $("#card_anioexp").prop('disabled', true);
-                $("#client_email").prop('disabled', true);
+                $("#card_client_email").prop('disabled', true);
 
+                // Campos de Oxxo
+                $("#oxxo_client_email").prop('disabled', true);
+
+                if (opcion_pago_selected == 'pago_debito' || opcion_pago_selected == 'pago_credito') {
+                    $(".next_button").text("Pago en proceso.. ");
+                }else{
+                    $(".next_button").text("Generando referencia.. ");
+                }
                 $(".next_button").prop('disabled', true);
-                $(".next_button").text("Pago en proceso.. ");
                 $(".next_button").append('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> <span class="sr-only">Loading...</span>')
                 $(".prev_button").hide();
                 triggerForm();

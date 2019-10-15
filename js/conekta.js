@@ -22,7 +22,7 @@ var conektaSuccessResponseHandler = function (token) {
 
   data.append('full_cotizador', fullc);
   data.append('client_name', client_name);
-  data.append('client_mail', $("#client_email").val());
+  data.append('client_mail', $("#card_client_email").val());
   data.append('fecha_evento', date_arr[2] + "-" + date_arr[1] + "-" + date_arr[0]);
   data.append('envio_selected', envio_selected);
   data.append('opcion_pago', opcion_pago_selected);
@@ -39,10 +39,15 @@ var conektaSuccessResponseHandler = function (token) {
     })
     .then(function (text) {
       var return_arr = text.split("{");
-      console.log(return_arr['1']);
-      //var json_return = JSON.parse("{" + return_arr['1']);
-      //$("#folio").text(json_return.folio);
-      //folio_compra = json_return.folio;
+      var json_return = JSON.parse("{" + return_arr['1']);
+      console.log(json_return);
+      if(json_return.type == 'pago_credito' || json_return.type == 'pago_debito' ){
+        $("#folio").text(json_return.folio);
+        folio_compra = json_return.folio;
+      }else{
+
+      }
+      
 
       $(".next_button").prop('disabled', false);
       $(".next_button").text("Envíar y terminar.");
@@ -80,20 +85,12 @@ const triggerForm = () => {
 const procesarDatosEnvio = () => {
   console.log("Procesar Datos de Envío");
   const data = new FormData();
-
-  //const client_name = $("#client_name").val();
-  //const date = $("#event_date").val();
-  //const date_arr = date.split("/");
-  //data.append('fecha_evento', date_arr[2] + "-" + date_arr[1] + "-" + date_arr[0]);
-  //data.append('envio_selected', envio_selected);
-  //data.append('num_pagos', opcion_pago_selected);
-  //data.append('order_status', "Paid");
   const date = $("#event_date").val();
   const date_arr = date.split("/");
 
   let json_toOdoo = '{'
   + '"nombre_cliente":"' + $("#client_name").val() + '",'
-  + '"correo_electronico":"' + $("#client_email").val() + '",'
+  + '"correo_electronico":"' + $("#card_client_email").val() + '",'
   + '"tel":"' + $("#post_telefono").val() + '",'
   + '"street":"' + $("#post_calle").val() + '",'
   + '"nombre_contacto":"' + $("#post_nombre").val() + '",'
@@ -119,8 +116,6 @@ const procesarDatosEnvio = () => {
   .then(function (resp) {
     json_toOdoo += '"lineas_productos":' + resp.line_products + '}';
     postData(json_toOdoo);
-    console.warn("Json to ODOO:");
-    console.log(json_toOdoo);
     $("#step_final").trigger("click");
     $(".next-step").hide();
   })
