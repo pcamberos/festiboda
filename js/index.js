@@ -148,7 +148,14 @@ $(document).ready(function() {
                 '</div> '
             );
         });
+<<<<<<< HEAD
     
+=======
+
+
+    initTesting();
+
+>>>>>>> 82e9bcaceebed301bb477773ec8ff34c44ae3a78
     if ($("#post_estado").length) {
         $('#post_estado option').remove();
         $("#post_estado").append('<option value="" disabled="" selected="">País</option>');
@@ -166,6 +173,25 @@ $(document).ready(function() {
     initTesting();
 });
 
+$(document).on('change', '#post_estado', function(event) {
+    var id = $("#post_estado option:selected").val();
+    const data = new FormData();
+    data.append('id', id);
+    fetch('getEstados.php', {
+            method: 'POST',
+            body: data
+        })
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(myJson) {
+            $('#post_delegacion option').remove();
+            $("#post_delegacion").append('<option value="" disabled="" selected="">Delegación / Municipio</option>');
+            $.each(myJson, function(index, item) {
+                $("#post_delegacion").append('<option value=' + item.id + '>' + item.nombre + '</option>');
+            });
+        });
+});
 const initTesting = () => {
     setTimeout(() => {
         /* Página 1 */
