@@ -21,10 +21,13 @@ var conektaSuccessResponseHandler = function (token) {
   const date_arr = date.split("/");
   
   let email_address = "";
+  let order_status = "";
   if(opcion_pago_selected == 'pago_credito' || opcion_pago_selected == 'pago_debito'){
     email_address = $("#card_client_email").val();
+    order_status = "Pagado";
   }else{
     email_address = $("#oxxo_client_email").val();
+    order_status = "Por Pagar";
   }
 
   data.append('full_cotizador', fullc);
@@ -34,7 +37,7 @@ var conektaSuccessResponseHandler = function (token) {
   data.append('envio_selected', envio_selected);
   data.append('opcion_pago', opcion_pago_selected);
   data.append('num_pagos', num_pagos);
-  data.append('order_status', "Pagado");
+  data.append('order_status', order_status);
   data.append('token_venta',token.id);
 
   fetch('executeOrder.php', {
@@ -55,11 +58,13 @@ var conektaSuccessResponseHandler = function (token) {
         $(".tu_pago").show();
         $(".folio_lbl").text("FOLIO:")
         $("#folio").text(json_return.folio);
+        $(".proceder").text("Para proceder, favor de especificar tus datos de envío.");
       }else{
         $(".mu_gracias").hide();
         $(".tu_pago").hide();
         $(".folio_lbl").text("Número de referencia oxxo: ")
         $("#folio").text(json_return.reference);
+        $(".proceder").text("Realizar su pago en oxxo con el número de referencia proporcionado.Se recomienda llenar los datos de envío para procerder una vez realizado el pago.");
       }
       
 

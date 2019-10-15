@@ -673,11 +673,11 @@ const validate_next = (step) => {
 
                 if (!valid_estado) {
                     $('.alert').append("No se ha especificado el estado.</br>")
-                    $('#post_pais').addClass('is-invalid');
+                    $('#post_estado').addClass('is-invalid');
                 }
                 if (!valid_delegacion) {
                     $('.alert').append("No se ha especificado la delegación.</br>")
-                    $('#post_estado').addClass('is-invalid');
+                    $('#post_delegacion').addClass('is-invalid');
                 }
                 if (!valid_colonia) {
                     $('.alert').append("No se ha especificado la colonia.</br>")
