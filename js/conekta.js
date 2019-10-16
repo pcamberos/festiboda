@@ -131,7 +131,8 @@ const procesarDatosEnvio = () => {
   + '"folio_web":"' + folio_compra + '",'
   + '"fecha_evento":"' + date_arr[2] + "-" + date_arr[1] + "-" + date_arr[0] + '",'
   + '"generado_web":"true",';
-  data.append('folio', folio_compra);  
+  data.append('folio', folio_compra); 
+
   fetch('procesarDatosEnvio.php', {
     method: 'POST',
     body: data
@@ -149,6 +150,7 @@ const procesarDatosEnvio = () => {
     console.log('Request failed', error)
   });
 };
+
 const postData = (json_data) => {
   $.ajax({
       type: "POST",
