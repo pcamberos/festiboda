@@ -29,7 +29,18 @@ $return_array = array();
 /**
  * 1. Obteniendo datos de la venta a traves del folio
  */
-
+$update="UPDATE orden_compra SET 
+nombre_cliente='".$_POST['nombre']."',
+envio_cp='".$_POST['cp']."',
+envio_pais='".$_POST['pais']."',
+envio_estado='".$_POST['estado']."',
+envio_municipio='".$_POST['ciudad']."',
+envio_calle='".$_POST['calle']."',
+envio_numext='".$_POST['exterior']."',
+envio_numint='".$_POST['interior']."',
+envio_tel='".$_POST['telefono']."',
+envio_referencia='".$_POST['referencia']."'
+WHERE folio='".$_POST['folio']."'";
 $sql = "Select lit.*, prod.referencia_web as prod_name from orden_compra ord
         Inner join line_items lit ON ord.folio = lit.order_folio
         Inner Join products prod ON prod.id = lit.product_id 
